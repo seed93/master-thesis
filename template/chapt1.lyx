@@ -1,0 +1,1653 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass thuthesis
+\begin_preamble
+\input{preamble}
+\end_preamble
+\options doctor,xetex
+\use_default_options true
+\master main.lyx
+\maintain_unincluded_children false
+\language english
+\language_package none
+\inputencoding utf8-plain
+\fontencoding default
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format pdf4
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement tbph
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+引言
+\end_layout
+
+\begin_layout Section
+研究背景
+\end_layout
+
+\begin_layout Standard
+在计算机视觉领域，与人脸相关的课题一直都是热门研究方向。人每天都在和不同的人打交道，判断一个人的身份最直接的方式就是记住这个人的长相，在茫茫人群中很难找到同一张
+脸，人脸和指纹一样是独一无二的。为了让计算机分辨出每个人的身份，最理想的方式就是通过人脸识别。人脸识别是人脸相关方向较上层的任务，其依赖于人脸检测、关键点检测、
+属性检测等基础应用。其中人脸检测最早可以追溯到上世纪六七十年代，在半个世纪里人脸检测逐渐成熟，已经做到了高精度实时多人检测。人脸识别任务较难，涉及计算机视觉、模
+式识别、机器学习、深度学习等多领域，其难点在于一个人有不同的打扮、年龄、拍摄环境，从而导致较大差别，而不同人又有可能长相接近而难以区分，该课题一直得到各科研机构
+的密切关注，但目前仍没有一套可以完全实用的解决方案。要让计算机区分人脸，必须有足够的训练数据，带有人物信息的照片可以很容易得从网络收集到，目前也有很多数据库，比
+如LFW
+\begin_inset CommandInset citation
+LatexCommand cite
+key "LFWTech"
+
+\end_inset
+
+、MultiPIE
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.cs.cmu.edu/afs/cs/project/PIE/MultiPie/Multi-Pie/Content.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+、CelebFaces+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sun2014deep"
+
+\end_inset
+
+等。因此目前的算法都利用的是现有的图片数据库，尽管在这些数据库上人们已经取得了非常高的正确率（LFW数据库的最新纪录已经达到99.15%的正确率
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sun2013hybrid,sun2014deep"
+
+\end_inset
+
+），但要想从人们日常中产生的任意照片准确地判断人物身份，还有很长路要走。
+\end_layout
+
+\begin_layout Standard
+人脸本身就是三维立体的，图片作为数据来源，在采集时已经丢失了很多信息，科研工作者也意识到了这一点，并逐渐开始尝试利用三维人脸数据做更多工作。然而三维人脸数据非常
+稀少，现有的较优秀的工作可以通过多张二维图片恢复出三维信息
+\begin_inset CommandInset citation
+LatexCommand cite
+key "zhu2013deep"
+
+\end_inset
+
+，来自faceebook的工作
+\begin_inset CommandInset citation
+LatexCommand cite
+key "taigman2014deepface"
+
+\end_inset
+
+利用大量二维数据结合3D模型在LFW数据库上曾打破记录。近年来已经涌现出很多出色的三维人脸识别的工作
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gupta2010anthropometric,queirolo20103d,kakadiaris2007three,heseltine2008three,bronstein2005three"
+
+\end_inset
+
+，随着三维重建技术的成熟，这必将成为人脸识别的大趋势。
+\end_layout
+
+\begin_layout Standard
+事实上，直接拍摄立体照片和三维成像已经可能，并逐渐渗透到人们生活中。采用普通的手机摄像头即可获得场景三维模型，HTC G17 EVO、LG P920等型号手机已
+支持3D照片和视频拍摄，Google的Tango项目已经开发出了手机和平板的原型机，其配有可以直接获得深度信息的摄像头。这些优秀的工作似乎让我们觉得立体模型就在
+我们手边，可以轻松获得，但事实上多数工作仍停留在科研阶段，而已有的消费级产品只能做到所谓的3D采集和显示，即同时采集两个视角照片并分别显示给用户的左右眼，让用户
+感觉自己采集到的是立体场景，其没有对场景做任何建模，不存在真实的三维模型。因此离直接采集到三维模型还有一定距离，但我们相信这一技术指日可待。然而，在三维模型能够
+轻松获得之前，科研工作者需要基于现有的技术条件获取尽量多的人脸三维模型来提升诸如人脸识别、表情识别等工作的结果。现有的三维人脸数据库十分有限，质量参差不齐，大多
+没有耳朵、下巴等关键部位，这限制了进一步的研究。因此，我们需要制作一套能够满足科研需要的人脸三维模型数据库。
+\end_layout
+
+\begin_layout Section
+相关工作
+\end_layout
+
+\begin_layout Subsection
+三维人脸数据库
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:三维人脸数据库"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+尽管采集人脸三维模型技术难度大、工作量大，各科研单位仍克服困难采集构建了若干数据库，各数据库的主要特点总结在表
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "table:dataset"
+
+\end_inset
+
+，下面对其中部分著名数据库逐一介绍。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="12" columns="6">
+<features rotate="0" booktabs="true" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top" width="0pt">
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+数据库
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+人物数
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+模型数
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+表情数
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+姿态数
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+多光照
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+中国科学院自动化所
+\begin_inset CommandInset citation
+LatexCommand cite
+key "xu2004automatic"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+123
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4624
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+有
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+BJUT-3D
+\begin_inset CommandInset citation
+LatexCommand cite
+key "baocai2009bjut"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+未知
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+伊斯坦堡海峡大学
+\begin_inset CommandInset citation
+LatexCommand cite
+key "savran2008bosphorus"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+105
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4652
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+34
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+13
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ND2006
+\begin_inset CommandInset citation
+LatexCommand cite
+key "faltemier2007using"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+888
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+13450
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+>5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+约克大学
+\begin_inset CommandInset citation
+LatexCommand cite
+key "heseltine2008three"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+350
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5250
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+FRGC v.2
+\begin_inset CommandInset citation
+LatexCommand cite
+key "phillips2005overview"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+466
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4007
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+GavabDB
+\begin_inset CommandInset citation
+LatexCommand cite
+key "moreno2004gavabdb"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+61
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+549
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3DRMA
+\begin_inset CommandInset citation
+LatexCommand cite
+key "beumier2001face"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+120
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+720
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+XM2VTS
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.ee.surrey.ac.uk/CVSSP/xm2vtsdb/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+未知
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+293
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+MPI
+\begin_inset CommandInset citation
+LatexCommand cite
+key "troje1996face"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+未知
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+西澳大学
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mian2009shade,mian2011illumination"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+未知
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+106
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+无
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+三维人脸数据库汇总
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "table:dataset"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+中国科学院自动化所
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/CASIA-1.jpg
+	height 5cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt1/CASIA-2.JPG
+	height 5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+拍摄环境和模型样本展示
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+该数据库
+\begin_inset CommandInset citation
+LatexCommand cite
+key "xu2004automatic"
+
+\end_inset
+
+采集于2004年8月至9月，使用Minolta Vivid 910型号3D扫描仪采集了123个人物的4624个模型，数据包含了多种光照、多种姿态下的多表情模型，
+并且最终模型包含了纹理信息，是较早也是较规范的三维人脸数据库。该数据库供注册用户下载
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://biometrics.idealtest.org/findTotalDbByMode.do?mode=Face
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+。该数据库的不足在于仅包含了中国人，人种单一。
+\end_layout
+
+\begin_layout Subsubsection
+BJUT-3D
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/BJUT.jpg
+	lyxscale 10
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+拍摄环境和模型样本展示
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+该数据库
+\begin_inset CommandInset citation
+LatexCommand cite
+key "baocai2009bjut"
+
+\end_inset
+
+由北京工业大学使用Cyberware 3030RGB/PS激光扫描仪采集了1200个只有中性表情的中国人脸三维模型，在2009年号称是当时国际上最大的中国人三维
+人脸数据库。其在拍摄时尽量保证了均匀光照，以及各模型之间光照的稳定。最终数据库中有500人数据对外发布，男女个数相同，年龄在16岁~49岁之间不等。该数据库的不
+足在于表情、人种、光照单一。
+\end_layout
+
+\begin_layout Subsubsection
+伊斯坦堡海峡大学
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://bosphorus.ee.boun.edu.tr/default.aspx
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/bosphorus.jpg
+	lyxscale 10
+	height 5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+模型样本展示
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+该数据库
+\begin_inset CommandInset citation
+LatexCommand cite
+key "savran2008bosphorus"
+
+\end_inset
+
+使用Inspeck Mega Capturor II 3D扫描仪采集了105人物的4652个三维模型，包含了34种表情和13种姿态，最特别的是包含四种不同遮挡。
+该数据库的不足在于光照单一，模型没有下巴、耳朵等部位。
+\end_layout
+
+\begin_layout Subsubsection
+ND2006
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www3.nd.edu/~cvrl/CVRL/Data_Sets.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/ND2006.jpg
+	lyxscale 10
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+模型样本展示
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+该数据库
+\begin_inset CommandInset citation
+LatexCommand cite
+key "faltemier2007using"
+
+\end_inset
+
+由圣母大学使用Minolta Vivid 910型号3D扫描仪采集了888个人物的13450个模型，每个人物带有多种表情，是目前已知的最大的三维人脸数据库。其不
+足在于光照、姿态单一。
+\end_layout
+
+\begin_layout Subsection
+多视角采集系统
+\end_layout
+
+\begin_layout Standard
+在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:三维人脸数据库"
+
+\end_inset
+
+节中总结了三维人脸数据库的现状，大部分数据库由3D激光扫描仪制作，结果虽然精度很高，但这样采集得到的数据有如下几个缺点：
+\end_layout
+
+\begin_layout Enumerate
+采集过程较长，人脸在长时间内较难保证稳定，容易出现变形
+\end_layout
+
+\begin_layout Enumerate
+没有多种光照下的数据
+\end_layout
+
+\begin_layout Enumerate
+彩色图片质量不高
+\end_layout
+
+\begin_layout Enumerate
+无法移动扫描仪以得到完整人头
+\end_layout
+
+\begin_layout Standard
+另一种较好的方法是搭建基于多视角相机阵列系统，利用立体匹配等方法从多视角图片中恢复三维模型。多视角采集系统采集速度快，配合多光照控制可以同步采集人物的动态表情，
+同时可以获得高精度的二维图片。接下来将介绍三项较出色的多视角人脸采集系统。
+\end_layout
+
+\begin_layout Subsubsection
+Light Stage 5
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/LS_Emily.jpg
+	lyxscale 20
+	height 6cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+美国南加州大学数字Emily项目搭建的第五代Light Stage多视角采集系统
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:emily"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Light Stage项目由美国伯克利大学和南加州大学共同完成，早在2000年就研制了第一代原型
+\begin_inset CommandInset citation
+LatexCommand cite
+key "debevec2000acquiring"
+
+\end_inset
+
+，经过十几年的改进已经发展到了第五代。该采集系统不仅被用于大量的科研项目，还被产业界广泛采用，索尼图形图像运作公司（Sony Pictures
+ Imageworks）、维塔数码（Weta Digital）、数字领域（Digital Domain）等公司利用该采集系统在《蜘蛛侠2》《金刚》《返老还童》《
+阿凡达》等著名影视作品中捕捉和渲染真实的视觉特效。
+\end_layout
+
+\begin_layout Standard
+Light Stage 5
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ma2007rapid"
+
+\end_inset
+
+采用了球形相机阵列，共有15台佳能1D Mark III单反相机，光源采用了156个白色LED，为了保证均匀光照，LED和相机均装配了偏振镜。此外，为了提高三维
+模型的精度，人的面部标记了部分关键点，以及用LCD投影结构光辅助。基于这些技术，Light Stage 5可以采集到高精度的多光照下的人脸三维模型，其模型可以真
+实反映人物在各种光照条件下的渲染效果。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/emily.png
+	height 4cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt1/StageLarge.jpg
+	lyxscale 10
+	height 3.975cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Light Stage 5采集效果展示，右图中人物纹理清晰可见。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+英属哥伦比亚和ETH
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/teaser-setup.jpg
+	lyxscale 20
+	height 5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+英属哥伦比亚和ETH合作搭建的多视角采集系统
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:emily-1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+该采集系统
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bradley2010high"
+
+\end_inset
+
+配有14台Sony HDR-SR7高清摄像机，光源采用9面LED阵列，每面LED阵列包含192个LED，可以提供较均匀的光照。该系统可以捕获连续的图片序列，通过
+单帧图像的立体匹配重建得到初始点云，再通过纹理跟踪等技术可以获得高精度的三维模型和纹理贴图。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/UBCdemo.jpg
+	lyxscale 20
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+英属哥伦比亚和ETH的三维模型重建效果展示
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:UBC"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+ETH和迪士尼
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/ETH.png
+	lyxscale 20
+	height 5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+瑞士苏黎世理工大学和迪士尼公司合作搭建的多视角采集系统
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ETH"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+该采集系统
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bee10"
+
+\end_inset
+
+与前两个系统相比，其最大的特点为搭建简单、成本低廉。该系统采用7台消费级单反相机，用闪光灯打光，不需要其他特殊的机械结构和光源即可获得高精度的三维人脸模型，其重
+建误差达到了0.088毫米。其使用的相机标定和三维重建算法在
+\begin_inset CommandInset citation
+LatexCommand cite
+key "johansson2013passive"
+
+\end_inset
+
+中再次使用，也为本文提供了较多参考。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/ETHdemo.jpg
+	lyxscale 20
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+ETH和迪士尼的三维模型重建效果展示
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:ETH-1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+本文工作
+\end_layout
+
+\begin_layout Standard
+本文研究目标是实现一套人脸三维模型采集和重建的系统，该系统可以同步采集多角度多光照下的图片数据，并通过三维重建算法计算出精确的三维模型。
+\end_layout
+
+\end_body
+\end_document

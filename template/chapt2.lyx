@@ -1,0 +1,404 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass thuthesis
+\begin_preamble
+\input{preamble}
+\end_preamble
+\options doctor,xetex
+\use_default_options true
+\master main.lyx
+\maintain_unincluded_children false
+\language english
+\language_package none
+\inputencoding utf8-plain
+\fontencoding default
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format pdf4
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement tbph
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+多视角相机采集系统
+\end_layout
+
+\begin_layout Standard
+本章将介绍两套多视角相机采集系统，第一套采集系统能够在多种光照条件下同步采集多个视角图片。该系统包含硬件系统实现以及为本系统特别编写的采集控制程序，在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:硬件系统介绍"
+
+\end_inset
+
+将对同步触发板、相机阵列、灯光系统等硬件设备作详细介绍，在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:采集程序介绍"
+
+\end_inset
+
+将对采集程序作介绍。第二套系统简化了设备和程序，图片质量大幅提升，能够获得更高质量的三维模型，也方便普通科研工作者、摄影爱好者复现本工作，将在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:单反相机采集系统"
+
+\end_inset
+
+节介绍。
+\end_layout
+
+\begin_layout Section
+Flea3和kinect相机采集系统
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Flea3和kinect相机采集系统"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+硬件系统
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:硬件系统介绍"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+首先我们应考虑要获得的三维数据有哪些要求。根据现有数据库的不足，我们希望采集系统能够完成如下指标：
+\end_layout
+
+\begin_layout Enumerate
+同步采集多视角二维高精度图片
+\end_layout
+
+\begin_layout Enumerate
+设置主动光源，能够配合相机同步采集多光照下人脸数据
+\end_layout
+
+\begin_layout Enumerate
+能够重建得到完整的人脸模型，头发精度可以略微降低要求，但面部特征需要保证高精度
+\end_layout
+
+\begin_layout Enumerate
+采集迅速，适合大规模采集
+\end_layout
+
+\begin_layout Standard
+基于如上4方面考虑，本文设计了如图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:我们的鸟笼"
+
+\end_inset
+
+的硬件系统，该系统采用不锈钢管制作框架，整体呈球形，高度为2米，留有开口方便进出，配套有各种连接件方便安装和固定光源和相机。
+\end_layout
+
+\begin_layout Standard
+包含有4盏175W专业摄影灯，可以提供恒定均匀的5500K色温光照，用于维持室内光照，此外，配有120颗5W的LED，每颗LED都可以通过专用的同步触发电路板单
+独触发，LED每5个构成一组，均匀分布在框架正面240度范围内。如此便可保证有足够的光照提高信噪比，又有可控的光源设定多光照环境。
+\end_layout
+
+\begin_layout Standard
+在相机方面，本文选择用Flea3工业彩色相机搭配kinect二代深度相机的方案。Flea3相机可以以15帧/秒的速率采集高达1200万像素的彩色图片序列，采用最
+新的USB3.0传输，体积小巧，方便安装，其镜头成像质量达到千万像素级，光圈达到F1.4，完全可以满足高精度的立体匹配。为了重建得到较好的头发，弥补立体匹配算法在杂
+乱图像上重建的不足，系统选择最新的kinect二代深度相机辅助拍摄人物头发。通过高精度彩色相机和稳定的kinect深度相机，即可同时获得高精度彩色图片和完整三维
+人脸模型。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt2/_MG_3595.JPG
+	lyxscale 10
+	height 7cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Flea3和kinect相机采集系统
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:我们的鸟笼"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+采集程序
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:采集程序介绍"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+为了方便数据采集，上述硬件系统还需要配套的采集软件辅助。采集软件包括如下功能：
+\end_layout
+
+\begin_layout Enumerate
+实时显示所有视角图像，包括彩色相机和kinect相机
+\end_layout
+
+\begin_layout Enumerate
+更改相机参数
+\end_layout
+
+\begin_layout Enumerate
+控制LED触发
+\end_layout
+
+\begin_layout Enumerate
+多台主机之间网络传输
+\end_layout
+
+\begin_layout Standard
+该软件需要实时显示所有视角图像是为了能实时调整和观察被拍摄者的姿态和光照情况，方便做临时调整。需要多台主机间能网络传输，一方面是因为目前在一台电脑上只能部署一台
+二代kinect相机，因此必须使用两台主机以配合两台kinect；另一方面是因为Flea3相机采用USB3.0传输，数据量非常大，一台主机主板和内存无法满足如此大
+的带宽需求，需要将10台相机分别部署在两台主机。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt2/program.jpg
+	lyxscale 10
+	height 7cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+采集程序界面截图
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:程序截图"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+单反相机采集系统
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:单反相机采集系统"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+硬件系统
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt2/_MG_8021.jpg
+	lyxscale 10
+	height 7cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+单反相机采集系统
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+考虑到
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Flea3和kinect相机采集系统"
+
+\end_inset
+
+所述系统拍摄图片质量有限，系统复杂，为进一步提升三维重建精度，简化拍摄流程，提出了本节所述的采集系统。该系统包含10台佳能D1200单反相机，配备有5台YN56
+0IV型号闪光灯和1台YN500EV型号闪光灯。所有相机连接到一台电脑主机，由
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:软件系统"
+
+\end_inset
+
+节所述的软件进行控制，由于单反相机需要硬件触发来同步拍摄，即便如此由于反光板抬升的时间差别也会造成同步的一点区别，因此采用如下方式同步：拍摄时处于暗室中，用软件
+触发所有相机拍摄，曝光2秒，其中一台主控相机连接主控闪光灯，曝光1秒，用后帘同步触发闪光灯，主控闪光灯同步触发其余闪光灯，由于所有相机接收到光线的时间是严格同步
+的，以此达到同步拍摄的目的。
+\end_layout
+
+\begin_layout Subsection
+软件系统
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:软件系统"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+软件系统采用由Duka Istvan独立编写的digiCamControl
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://digicamcontrol.com
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+，该软件支持多台单反相机同时采集和预览，以及对每台相机进行参数调整，将照片直接保存在电脑上，省去了自己编写控制程序。
+\end_layout
+
+\end_body
+\end_document

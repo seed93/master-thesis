@@ -1,0 +1,249 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass thuthesis
+\begin_preamble
+\input{preamble}
+\end_preamble
+\options doctor,xetex
+\use_default_options true
+\master main.lyx
+\maintain_unincluded_children false
+\language english
+\language_package none
+\inputencoding utf8-plain
+\fontencoding default
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format pdf4
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement tbph
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Chapter
+人脸三维模型重建
+\end_layout
+
+\begin_layout Standard
+本章将着重阐述在已知相机参数条件下，利用多视角图片重建获得人脸三维面片模型。本章重点集中在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:重建三维点云"
+
+\end_inset
+
+节，该节详细介绍了通过双目匹配得到三维点云的方法，也是本工作的核心。生成mesh模型以及纹理贴图在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Mesh模型生成及纹理贴图"
+
+\end_inset
+
+节简要介绍。
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Section
+重建三维点云
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:重建三维点云"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/recons.pdf
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+三维点云重建算法流程图
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:重建流程"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:重建流程"
+
+\end_inset
+
+描绘了三维点云的重建流程。首先对采集到的10个视角图片做预处理，即图像分割，得到去除背景的图片供后续步骤使用，该操作可以减少误匹配以及提高算法速度。接下来将相机
+分组，相邻两个相机构成一对，对每对相机做同样操作，这些操作包括：
+\end_layout
+
+\begin_layout Enumerate
+图片对齐。利用标定好的相机参数将两张图片校正对齐，使得待匹配图片的像素点和其在参考图片上的匹配点位于同一行，该操作可以将二维的逐像素匹配降维到一维的像素匹配，大
+大简化了算法复杂度；
+\end_layout
+
+\begin_layout Enumerate
+将对齐好的图片对调整到不同尺寸，构成金字塔模型。金字塔模型是指同样的图片拥有不同的分辨率，先对低分辨率图片做全局立体匹配，在高分辨率图片上结合前一层低分辨率图片
+计算得到的结果快速计算更精确的结果，该方法能在保证精度的前提下大大提高效率；
+\end_layout
+
+\begin_layout Enumerate
+对于每一层的立体匹配，又分为如下几步：
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+NCC匹配：在参考图片和待匹配图片中各选择一点，选取其周围的像素构成两列向量，求取两列向量的夹角，该夹角可以较好地描述两点的相似程度，对光照变化有较好的鲁棒性；
+\end_layout
+
+\begin_layout Enumerate
+约束限定：采用平滑约束、顺序约束、一致性约束三种约束方法对当前得到的视差图进行滤波，筛除错误的匹配点；
+\end_layout
+
+\begin_layout Enumerate
+重新匹配：利用已有的匹配点作为约束，对上一步筛选掉的点进行重新匹配；
+\end_layout
+
+\begin_layout Enumerate
+中值滤波：作用与约束限定类似，删除错误匹配点，对部分未匹配点重新匹配；
+\end_layout
+
+\begin_layout Enumerate
+视差图优化：对视差图亚像素优化，得到精确平滑的视差图
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+结合相机参数，将视差图转换为三维点云
+\end_layout
+
+\begin_layout Enumerate
+对点云进行统计学滤波，从三维结构上删除错误点
+\end_layout
+
+\begin_layout Standard
+对于kinect相机，可以直接通过深度图和相机参数获得点云，将其点云和立体匹配得到的点云融合得到完整点云，最后通过一系列的滤波和优化方法去除噪声和重复点。
+\end_layout
+
+\begin_layout Section
+Mesh模型生成及纹理贴图
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Mesh模型生成及纹理贴图"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+泊松重建
+\end_layout
+
+\begin_layout Standard
+现有的三角面片生成算法包括移动立方体、泊松重建、旋转球算法等，其中泊松重建使用最普及、效果通常较好。本文拟采用泊松重建的方法得到三角面片模型。进一步可以利用拉普
+拉斯平滑、平均曲率流等方法进行表面平滑，结合图片信息还可以直接在三维面片上让点沿法向移动，优化得到更多细节信息，提高表面重建精度。
+\end_layout
+
+\begin_layout Subsection
+表面平滑
+\end_layout
+
+\begin_layout Subsection
+纹理贴图
+\end_layout
+
+\begin_layout Standard
+最后一步是对三维模型纹理贴图，由于各视角相机有细微差异、拍摄角 度和光照不同，导致各视角图片光照差异较大，因此如何融合不同光照下的 纹理信息也是难点之一。
+\end_layout
+
+\end_body
+\end_document
