@@ -76,36 +76,74 @@
 \begin_body
 
 \begin_layout Chapter
-多视角相机采集系统
+多视角图像采集系统
 \end_layout
 
 \begin_layout Standard
-本章将介绍两套多视角相机采集系统，第一套采集系统能够在多种光照条件下同步采集多个视角图片。该系统包含硬件系统实现以及为本系统特别编写的采集控制程序，在
+在前文已介绍几种国内外多种多视角图像采集系统，各有千秋，本章将介绍三套多视角相机采集系统，能够针对不同场合和需求完成多视角采集。第一套采集系统能够在多种光照条件
+下同步采集多个视角图片。该系统包含硬件系统实现以及为本系统特别编写的采集控制程序，在 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:硬件系统介绍"
 
 \end_inset
 
-将对同步触发板、相机阵列、灯光系统等硬件设备作详细介绍，在
+ 节将对同步触发板、相机阵列、灯光系统等硬件设备作详细介绍，在 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:采集程序介绍"
 
 \end_inset
 
-将对采集程序作介绍。第二套系统简化了设备和程序，图片质量大幅提升，能够获得更高质量的三维模型，也方便普通科研工作者、摄影爱好者复现本工作，将在
+ 节将对采集程序作介绍。第二套系统简化了设备和程序，采用单反相机和闪光灯，图片质量大幅提升，能够获得更高质量的三维模型，也方便普通科研工作者、摄影爱好者复现本工
+作，将在 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:单反相机采集系统"
 
 \end_inset
 
+ 节介绍。第三套系统用于人体三维重建，由GoPro相机和LED摄影灯构成环形阵列，将在 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:GoPro环形阵列采集系统"
+
+\end_inset
+
+ 节介绍，对应的采集控制程序在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:gopro采集程序"
+
+\end_inset
+
 节介绍。
 \end_layout
 
+\begin_layout Standard
+三套多视角相机采集系统有各自的优势和特点，但其基本特征是相同的，具体来说，需要具有如下特征：
+\end_layout
+
+\begin_layout Enumerate
+支持多相机同步拍摄。由于被拍摄者为自然人，在拍摄过程中难免会产生微小移动或眨眼等表情变化，因此相机同步拍摄非常关键，也是每套系统考虑的第一要素，在下文介绍中将详
+细阐述每套系统的同步方案；
+\end_layout
+
+\begin_layout Enumerate
+多相机参数控制。最基本的需要同步控制所有相机的快门曝光时间、连拍数量、增益、白平衡、分辨率等基本参数；
+\end_layout
+
+\begin_layout Enumerate
+多相机画面实时预览。由于多相机系统需要将被拍摄物体置于所有相机视野内，因此需要对相机实时预览，方便调节相机角度和位置。
+\end_layout
+
+\begin_layout Standard
+以上特征是多相机系统的基本要求，在下文将对每套系统做详细介绍。尽管在本论文中三套系统分别用于人脸、人体数据采集，由于系统本身对被拍摄者没有特定要求，理论上也可扩
+展至其他场合，如文物三维重建、光场数据采集等。
+\end_layout
+
 \begin_layout Section
-Flea3和kinect相机采集系统
+Flea3和Kinect2相机采集系统
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Flea3和kinect相机采集系统"
@@ -127,11 +165,11 @@ name "sec:硬件系统介绍"
 \end_layout
 
 \begin_layout Standard
-首先我们应考虑要获得的三维数据有哪些要求。根据现有数据库的不足，我们希望采集系统能够完成如下指标：
+根据现有三维人脸数据库的不足，我们希望采集系统能够完成如下设计要求：
 \end_layout
 
 \begin_layout Enumerate
-同步采集多视角二维高精度图片
+同步采集多视角图片
 \end_layout
 
 \begin_layout Enumerate
@@ -147,26 +185,27 @@ name "sec:硬件系统介绍"
 \end_layout
 
 \begin_layout Standard
-基于如上4方面考虑，本文设计了如图
+基于如上四方面考虑，本文设计了如图
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:我们的鸟笼"
 
 \end_inset
 
-的硬件系统，该系统采用不锈钢管制作框架，整体呈球形，高度为2米，留有开口方便进出，配套有各种连接件方便安装和固定光源和相机。
+的硬件系统，该系统采用不锈钢管制作框架，整体呈球形，高度为2米，留有开口方便进出，配套有各种连接件方便安装和固定光源及相机。
 \end_layout
 
 \begin_layout Standard
-包含有4盏175W专业摄影灯，可以提供恒定均匀的5500K色温光照，用于维持室内光照，此外，配有120颗5W的LED，每颗LED都可以通过专用的同步触发电路板单
-独触发，LED每5个构成一组，均匀分布在框架正面240度范围内。如此便可保证有足够的光照提高信噪比，又有可控的光源设定多光照环境。
+光照方面，系统包含有4盏175W专业摄影灯，可以提供恒定均匀的5500K色温光照，用于维持室内光照，此外，配有120颗5W的LED，每颗LED都可以通过专用的同
+步触发电路板单独触发，LED每5个构成一组，均匀分布在框架正面240度范围内。如此便可保证有足够的光照提高信噪比，又有可控的光源设定多光照环境。
 \end_layout
 
 \begin_layout Standard
-在相机方面，本文选择用Flea3工业彩色相机搭配kinect二代深度相机的方案。Flea3相机可以以15帧/秒的速率采集高达1200万像素的彩色图片序列，采用最
-新的USB3.0传输，体积小巧，方便安装，其镜头成像质量达到千万像素级，光圈达到F1.4，完全可以满足高精度的立体匹配。为了重建得到较好的头发，弥补立体匹配算法在杂
-乱图像上重建的不足，系统选择最新的kinect二代深度相机辅助拍摄人物头发。通过高精度彩色相机和稳定的kinect深度相机，即可同时获得高精度彩色图片和完整三维
-人脸模型。
+在相机方面，本文选择用Point Grey生产的Flea3工业彩色相机搭配Kinect二代深度相机的方案。Flea3相机可以以15帧/秒的速率采集高达1200万
+像素的彩色图片序列，采用最新的USB3.0传输，体积小巧，方便安装，其镜头成像质量达到千万像素级，光圈达到F1.4，完全可以满足高精度的立体匹配。10台Flea3相
+机均匀间隔置于人正脸前180度范围内，高度与人脸相同。为了重建得到较好的头发，弥补立体匹配算法在杂乱图像上重建的不足，系统选择最新的Kinect二代深度相机辅助
+拍摄人物头发，两台Kinect置于人脸背面180度范围内，等间隔放置。通过高精度彩色相机和稳定的Kinect深度相机，即可同时获得高精度彩色图片和完整三维人脸模
+型。
 \end_layout
 
 \begin_layout Standard
@@ -185,13 +224,10 @@ status collapsed
 \end_inset
 
 
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Flea3和kinect相机采集系统
+Flea3和Kinect相机采集系统
 \end_layout
 
 \end_inset
@@ -227,7 +263,7 @@ name "sec:采集程序介绍"
 \end_layout
 
 \begin_layout Enumerate
-实时显示所有视角图像，包括彩色相机和kinect相机
+实时显示所有视角图像，包括彩色相机和Kinect相机
 \end_layout
 
 \begin_layout Enumerate
@@ -243,9 +279,11 @@ name "sec:采集程序介绍"
 \end_layout
 
 \begin_layout Standard
-该软件需要实时显示所有视角图像是为了能实时调整和观察被拍摄者的姿态和光照情况，方便做临时调整。需要多台主机间能网络传输，一方面是因为目前在一台电脑上只能部署一台
-二代kinect相机，因此必须使用两台主机以配合两台kinect；另一方面是因为Flea3相机采用USB3.0传输，数据量非常大，一台主机主板和内存无法满足如此大
-的带宽需求，需要将10台相机分别部署在两台主机。
+需要多台主机间网络传输，一方面是因为目前在一台电脑上只能部署一台Kinect二代相机，因此必须使用两台主机以配合两台Kinect；另一方面是因为Flea3相机采
+用USB3.0传输，带宽占用非常大，一台主机主板和内存无法满足如此大的带宽需求，需要将10台相机分别部署在两台主机。采集程序包括两部分，其一为使用MFC编写的人机
+交互界面，也被称为服务端，其二为底层控制相机的客户端，客户端同时支持Flea3相机和Kinect，在每台主机上只需运行客户端即可，其中一台主机同时可作为服务端，
+打开GUI程序即可完成各项操作。服务端GUI程序可以在左上方输出所有操作的执行状态，在左下方列出所有连接的相机IP和端口号，相机个数可以自适应，默认将显示所有已
+连接相机。每台相机都可以单独实时预览和控制，支持软件触发和硬件触发，其中硬件触发和LED灯的控制均通过串口通信，向外置的定制采集板发送信号。
 \end_layout
 
 \begin_layout Standard
@@ -270,7 +308,7 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-采集程序界面截图
+采集程序界面截图。部分相机倒置是为了方便相机在球形框架上放置。
 \end_layout
 
 \end_inset
@@ -345,28 +383,46 @@ status collapsed
 \end_layout
 
 \begin_layout Standard
-考虑到
+考虑到 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:Flea3和kinect相机采集系统"
 
 \end_inset
 
-所述系统拍摄图片质量有限，系统复杂，为进一步提升三维重建精度，简化拍摄流程，提出了本节所述的采集系统。该系统包含10台佳能D1200单反相机，配备有5台YN56
-0IV型号闪光灯和1台YN500EV型号闪光灯。所有相机连接到一台电脑主机，由
+ 节所述系统拍摄图片质量有限，系统复杂，为进一步提升三维重建精度，简化拍摄流程，提出了本节所述的采集系统。该系统包含10台佳能D1200单反相机，配备有5台YN
+560IV型号闪光灯和1台YN500EV型号闪光灯。所有相机通过USB连接到一台电脑主机，由 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:软件系统"
 
 \end_inset
 
-节所述的软件进行控制，由于单反相机需要硬件触发来同步拍摄，即便如此由于反光板抬升的时间差别也会造成同步的一点区别，因此采用如下方式同步：拍摄时处于暗室中，用软件
-触发所有相机拍摄，曝光2秒，其中一台主控相机连接主控闪光灯，曝光1秒，用后帘同步触发闪光灯，主控闪光灯同步触发其余闪光灯，由于所有相机接收到光线的时间是严格同步
-的，以此达到同步拍摄的目的。
+ 节所述的软件进行控制。单反相机同步控制有若干方案：
+\end_layout
+
+\begin_layout Enumerate
+软件同步：由采集程序同步发送拍摄指令完成同步拍摄，该方法延迟最大，误差可达到1秒，对于高精度重建完全不可取。
+\end_layout
+
+\begin_layout Enumerate
+硬件同步：硬件同步有两种方案，自制快门线或无线同步。本系统采用的佳能D1200单反相机配有C1快门触发口，两条线短路即可完成快门触发，将多台相机对应电极相连即可
+完成同步控制，此为自制快门线方法。无线同步可购买现有的模块，每台相机配置接收器，与发射器处于同一频道，即可同步触发。这两种方案可以达到相同效果，自制快门线成本低
+，但使用不便，无线同步成本较高。硬件同步理论上可以做到严格同步，但由于单反相机本身限制，拍照时自身反光板抬升需要一定时间，不同相机的抬起时间有一定差别，因此即便
+是硬件同步触发，也会有一点微弱差别，该误差在10毫秒量级。
+\end_layout
+
+\begin_layout Enumerate
+本文采用如下方式同步：拍摄时处于暗室中，用软件触发所有相机拍摄，曝光2秒，其中一台主控相机连接主控闪光灯，曝光1秒，用后帘同步触发闪光灯，主控闪光灯同步触发其余
+闪光灯，由于所有相机接收到光线的时间是严格同步的，以此达到同步拍摄的目的。
+\end_layout
+
+\begin_layout Standard
+光照方面，YN500EV作为主控闪光灯置于人脸正前方，另有一台辅助闪光灯置于人脸前下方为下巴补光，另有四台均匀置于两侧。
 \end_layout
 
 \begin_layout Subsection
-软件系统
+采集程序
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:软件系统"
@@ -397,7 +453,129 @@ http://digicamcontrol.com
 
 \end_inset
 
-，该软件支持多台单反相机同时采集和预览，以及对每台相机进行参数调整，将照片直接保存在电脑上，省去了自己编写控制程序。
+，该软件支持多台单反相机同时采集和预览，能够单独对每台相机进行参数调整，可以将照片直接保存在电脑上，省去购买相机存储卡和后期数据传输。digiCamContro
+l可以完成所需的所有功能，省去了自己编写采集程序，这里不再赘述。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+这里加一张digiCamControl运行截图
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+GoPro环形阵列采集系统
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:GoPro环形阵列采集系统"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+硬件系统
+\end_layout
+
+\begin_layout Standard
+为了推广和延伸论文工作，搭建了第三套相机阵列系统，该系统主要用于人体三维重建，可以生成高精度人体三维模型，为制作电影特效提供帮助。该系统由16台GoPro
+ Hero4 Black相机构成，GoPro相机的特点是分辨率高、体积小巧、视场角大，非常适合近距离拍摄人体照片。16台相机均匀分布在一个环形金属架上，共4行4
+列，环形直径为1.4米。环形装置下方配有大功率电机和转盘，被拍摄对象在环形中心保持几秒钟静止不动，装置通过转动拍摄多组照片，可以获得更密集的视角图片，从而提高重建
+精度。
+\end_layout
+
+\begin_layout Standard
+光照方面，该系统配有16组LED摄影灯，分两行均匀放置于环形装置外，环形装置由白色漫反射膜遮罩，一方面使光照更加均匀，另一方面使相机拍摄背景相对固定，更有利于进
+行图片分割。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt2/gopro1.jpg
+	lyxscale 10
+	height 7cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+GoPro环形阵列采集系统
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+采集程序
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:gopro采集程序"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+GoPro和前两套系统有所差别，每台相机都可独立运行，通过无线控制器同步采集，不需要采集程序。但是由于GoPro没有实时预览屏幕，需要通过手机App依次连接Go
+Pro实现预览，以调整相机位置，在实际使用中非常不便，以及每台相机参数设置、数据传输都需要手动操作每台相机，费时费力，操作时还会改变相机位置。因此本文为GoPr
+o编写了独立的采集程序。
+\end_layout
+
+\begin_layout Standard
+GoPro采用wifi发送控制信号，每台GoPro相机产生一个wifi热点。GoPro官方的无线控制器采用了特殊的软硬件设置使得其可以同时连接多个Gopro相机
+，在无法获得其原理的条件下，每台GoPro都需要一个独立的无线网卡连接，因此本系统配置有16块无线网卡，通过windows脚本完成自动连接以及固定ip设置。在网
+上查找到一些资料
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/KonradIT/goprowifihack
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+可以完成GoPro的基本操作，这些指令由爱好者对网络传输数据分析得到，受此启发，本文采用相同解析数据包的方法，分析出更多控制指令。使用python完成了GUI的
+编写，该采集程序支持多相机实时预览、相机关机与唤醒、删除和下载文件、各项参数设定等。通过对相机发送请求指令，用ffmpeg软件解析UDP协议中的流媒体，从而实现
+了实时预览，需要注意的是，实时预览时需要定时向GoPro发送维持指令，防止掉线。GoPro关机后进入低功耗模式，此时wifi并未关闭，可以通过发送特定指令唤醒。
+此处需要注意的是，需要定时向GoPro发送状态查询指令，以防止其自动关机。该采集程序极大程度简化了采集流程，减少了人工工作量，加快了采集速度。
 \end_layout
 
 \end_body
