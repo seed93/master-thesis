@@ -1642,7 +1642,273 @@ name "fig:ETH-1"
 \end_layout
 
 \begin_layout Subsection
-相机标定及三维重建算法
+相机标定算法
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:标定流程"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+为了从图片中计算得到三维模型，需要对每个相机进行标定。相机成像及标定原理将在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:相机成像及标定原理"
+
+\end_inset
+
+节简述。
+\end_layout
+
+\begin_layout Standard
+大部分的标定方法都是对一些特殊设定的物体拍照，被称为标定物，标定物可以提供很鲁棒的信息用于相机匹配，从而计算参数。通常这些标定物有大量容易定位的标记点，这些点满
+足一定的物理约束，通过大量的标记点和这些约束可以计算得到相机参数。对于单相机而言，世界坐标系和相机坐标系可以认为是同一坐标系，因此外参矩阵不需要标定，认为
+\begin_inset Formula $\boldsymbol{R}$
+\end_inset
+
+是单位阵，
+\begin_inset Formula $\boldsymbol{T}$
+\end_inset
+
+全为0即可。而多相机系统则需要同时考虑多个相机的标定，因此标记点需要被多个相机同时看到，通过寻找匹配关系从而确定三维坐标，进而通过给定的约束优化得到准确的相机参
+数。
+\end_layout
+
+\begin_layout Subsubsection
+棋盘格
+\end_layout
+
+\begin_layout Standard
+棋盘格方法最早被用于单目和双目相机标定
+\begin_inset CommandInset citation
+LatexCommand cite
+key "zhang1999flexible"
+
+\end_inset
+
+，利用一个已知尺寸且印有黑白相间格子的平面在不同角度下多次拍摄，利用点平面和等距两个约束计算参数，精度较高。著名的实现有Bouguet实现的Matlab工具包
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.vision.caltech.edu/bouguetj/calib_doc/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+，已集成在OpenCV里，该工具包需要人为参与选择每张图片中棋盘格的边界点，操作复杂，其改进版RADDOC工具箱
+\begin_inset CommandInset citation
+LatexCommand cite
+key "zhang2004extrinsic"
+
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://bitbucket.org/michaeldwarren/amcctoolbox/wiki/Home
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+，以及改进版AMCC工具箱
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Warren2013"
+
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://sites.google.com/site/scarabotix/ocamcalib-toolbox
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+，对标定流程加以优化和扩展，能够支持多相机全自动标定。类似的还有Bo Li实现的标定方法
+\begin_inset CommandInset citation
+LatexCommand cite
+key "li2013multiple"
+
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://sites.google.com/site/prclibo/toolbox
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+，该方法使用特殊pattern替换棋盘格，但仍然限制在一个平面上。在本文所述三套系统中，棋盘格平面无法让所有相机同时看到，因此无法使用该方法。此外，该方法需要拍
+摄多达20组照片，操作繁琐。
+\end_layout
+
+\begin_layout Subsubsection
+一维球体
+\end_layout
+
+\begin_layout Standard
+一维球体标定法是用一些大小已知的球体约束在一条直线上，令该直线穿过一固定点多次拍摄，利用直线的约束计算参数，该方法
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.ee.surrey.ac.uk/CVSSP/VMRG/WandCalibration/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+理论上适用于球形多相机系统，但是实际中很难保证多个球在同一条直线以及围绕同一点旋转拍摄，该方法同样需要拍摄多组照片，操作繁琐，难度较大。
+\end_layout
+
+\begin_layout Subsubsection
+球面标定
+\end_layout
+
+\begin_layout Standard
+球面标定有多种算法，如Motilal
+\begin_inset CommandInset citation
+LatexCommand cite
+key "agrawal2003camera"
+
+\end_inset
+
+实现的球面标定法，计算复杂，精度一般，Hui Zhang
+\begin_inset CommandInset citation
+LatexCommand cite
+key "zhang2007camera"
+
+\end_inset
+
+实现的方法有同样问题，Junhua Sun
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sun2016global"
+
+\end_inset
+
+实现的方法对拍摄条件要求较高。
+\end_layout
+
+\begin_layout Subsubsection
+激光点自标定
+\end_layout
+
+\begin_layout Standard
+激光点自标定方法由Svoboda提出
+\begin_inset CommandInset citation
+LatexCommand cite
+key "svoboda2005software"
+
+\end_inset
+
+，至少需要3台相机，只需要让激光照射任意场景使各相机能找到光点即可，该方法的优点是激光点容易分割与匹配，但同样需要拍摄大量照片，操作复杂，鲁棒性较差。
+\end_layout
+
+\begin_layout Standard
+本文采用了
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bee10"
+
+\end_inset
+
+中介绍的标定方法，并做了改进，将在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:高精度彩色相机标定"
+
+\end_inset
+
+节具体介绍。尽管改进的
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bee10"
+
+\end_inset
+
+的方法可以对球形相机系统完成快速的高精度标定，但是对Kinect却不适用。Kinect相机视野较大且分辨率低（
+\begin_inset Formula $1920\times1080$
+\end_inset
+
+），因此球在画面中的有效像素仅有
+\begin_inset Formula $200\times200$
+\end_inset
+
+，无法检测到球上的标记点。同样，上述所有方法均无法同时标定视场角差异较大的相机系统。为此本文提出一种新的标定算法，可同时标定分辨率、视场角差异较大的相机系统，该
+方法在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:多视角不同分辨率相机标定"
+
+\end_inset
+
+节具体介绍。
+\end_layout
+
+\begin_layout Subsection
+三维重建算法
 \end_layout
 
 \begin_layout Section

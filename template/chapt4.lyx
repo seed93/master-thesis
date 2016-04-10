@@ -97,10 +97,6 @@ reference "sec:Mesh模型生成及纹理贴图"
 节简要介绍。
 \end_layout
 
-\begin_layout Standard
-
-\end_layout
-
 \begin_layout Section
 重建三维点云
 \begin_inset CommandInset label

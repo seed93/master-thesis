@@ -26,7 +26,7 @@
 \font_tt_scale 100
 \graphics default
 \default_output_format pdf4
-\output_sync 0
+\output_sync 1
 \bibtex_command default
 \index_command default
 \float_placement tbph
@@ -103,7 +103,8 @@ reference "sec:多视角不同分辨率相机标定"
 
 \end_inset
 
-节的方法适用于不同分辨率、不同焦距相机系统标定。
+节的方法适用于不同分辨率、不同焦距相机系统标定。kinect本身包含有深度相机和彩色相机，这二者也具有各自的内参和相对外参，这些参数不会改变，可认为是双目相机系
+统，前人已有较多工作，关于这二者的标定本文不再赘述。
 \end_layout
 
 \begin_layout Standard
@@ -120,6 +121,13 @@ reference "sec:多视角不同分辨率相机标定"
 
 \begin_layout Section
 相机成像及标定原理
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:相机成像及标定原理"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -323,246 +331,6 @@ reference "sub:图片对齐"
 \end_layout
 
 \begin_layout Section
-标定方法综述
-\begin_inset CommandInset label
-LatexCommand label
-name "sec:标定流程"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-大部分的标定方法都是对一些特殊设定的物体拍照，找到图片中的标记点，这些点满足一定的物理约束，通过大量的标记点和这些约束可以计算得到相机参数。对于单相机而言，世界
-坐标系和相机坐标系可以认为是同一坐标系，因此外参矩阵不需要标定，认为
-\begin_inset Formula $\boldsymbol{R}$
-\end_inset
-
-是单位阵，
-\begin_inset Formula $\boldsymbol{T}$
-\end_inset
-
-全为0即可。而多相机系统则需要同时考虑多个相机的标定，因此标记点需要被多个相机同时看到，通过寻找匹配关系从而确定三维坐标，进而通过给定的约束优化得到准确的相机参
-数。
-\end_layout
-
-\begin_layout Standard
-传统的标定方法包括棋盘格标定、一维球体标定、球面标定、激光点自标定等。棋盘格方法利用一个已知尺寸且印有黑白相间格子的平面在不同角度下多次拍摄，利用点平面和等距两
-个约束计算参数，精度较高，著名的实现有Bouguet实现的Matlab工具包
-\begin_inset CommandInset citation
-LatexCommand cite
-key "zhang1999flexible"
-
-\end_inset
-
-
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-\begin_inset Flex URL
-status open
-
-\begin_layout Plain Layout
-
-http://www.vision.caltech.edu/bouguetj/calib_doc/
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-，已集成在OpenCV里，以及其改进版RADDOC工具箱
-\begin_inset CommandInset citation
-LatexCommand cite
-key "zhang2004extrinsic"
-
-\end_inset
-
-
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-\begin_inset Flex URL
-status open
-
-\begin_layout Plain Layout
-
-https://bitbucket.org/michaeldwarren/amcctoolbox/wiki/Home
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-，以及改进版AMCC工具箱
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Warren2013"
-
-\end_inset
-
-
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-\begin_inset Flex URL
-status open
-
-\begin_layout Plain Layout
-
-https://sites.google.com/site/scarabotix/ocamcalib-toolbox
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-。类似的还有Bo Li实现的标定方法
-\begin_inset CommandInset citation
-LatexCommand cite
-key "li2013multiple"
-
-\end_inset
-
-
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-\begin_inset Flex URL
-status open
-
-\begin_layout Plain Layout
-
-https://sites.google.com/site/prclibo/toolbox
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-，该方法使用特殊pattern替换棋盘格，但仍然限制在一个平面上。在本文所述三套系统中，棋盘格平面无法让所有相机同时看到，因此无法使用该方法。此外，该方法需要拍
-摄多达20组照片，操作繁琐。
-\end_layout
-
-\begin_layout Standard
-一维球体标定法是用一些大小已知的球体约束在一条直线上，令该直线穿过一固定点多次拍摄，利用直线的约束计算参数，该方法
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-\begin_inset Flex URL
-status open
-
-\begin_layout Plain Layout
-
-http://www.ee.surrey.ac.uk/CVSSP/VMRG/WandCalibration/
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-理论上适用于球形多相机系统，但是实际中很难保证多个球在同一条直线以及围绕同一点旋转拍摄，该方法同样需要拍摄多组照片，操作繁琐，难度较大。
-\end_layout
-
-\begin_layout Standard
-球面标定有多种算法，如Motilal
-\begin_inset CommandInset citation
-LatexCommand cite
-key "agrawal2003camera"
-
-\end_inset
-
-实现的球面标定法，计算复杂，精度一般，Hui Zhang
-\begin_inset CommandInset citation
-LatexCommand cite
-key "zhang2007camera"
-
-\end_inset
-
-实现的方法有同样问题，Junhua Sun
-\begin_inset CommandInset citation
-LatexCommand cite
-key "sun2016global"
-
-\end_inset
-
-实现的方法对拍摄条件要求较高。
-\end_layout
-
-\begin_layout Standard
-激光点自标定方法由Svoboda提出
-\begin_inset CommandInset citation
-LatexCommand cite
-key "svoboda2005software"
-
-\end_inset
-
-，至少需要3台相机，只需要让激光照射任意场景使各相机能找到光点即可。该方法需要拍摄多组照片，操作复杂，鲁棒性较差。
-\end_layout
-
-\begin_layout Standard
-因此本文采用了
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Bee10"
-
-\end_inset
-
-中介绍的标定方法，并做了改进，将在
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:高精度彩色相机标定"
-
-\end_inset
-
-节具体介绍。尽管改进的
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Bee10"
-
-\end_inset
-
-的方法可以对球形相机系统完成快速的高精度标定，但是对kinect却不适用。kinect相机视野较大且分辨率低（仅为1080P），因此球在画面中的有效像素仅有
-\begin_inset Formula $200\times200$
-\end_inset
-
-，无法检测到球上的标记点，为此本文提出一种新的标定算法，用于计算低分辨率的相机在已知参数的多相机系统中的外参矩阵，该方法在
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:多视角不同分辨率相机标定"
-
-\end_inset
-
-节具体介绍。
-\end_layout
-
-\begin_layout Standard
-kinect本身包含有深度相机和彩色相机，这二者也具有各自的内参和相对外参，这些参数不会改变，可认为是双目相机系统，前人已有较多工作，关于这二者的标定本文不再赘
-述。
-\end_layout
-
-\begin_layout Section
 高精度彩色相机标定
 \begin_inset CommandInset label
 LatexCommand label
@@ -699,7 +467,7 @@ reference "fig:marker"
 \end_layout
 
 \begin_layout Subsection
-算法详细步骤
+算法步骤
 \end_layout
 
 \begin_layout Standard
@@ -975,9 +743,30 @@ reference "fig:标定流程"
 
 \end_inset
 
-简述了标定算法流程中每一步得到的结果。首先需要分割标定球，具体做法是通过边缘检测得到边缘信息，利用RANSAC找到图像中最大的圆，然后利用图像分割算法将标记面片
-和标定球分割开，接着对每个标记面片进行特征点提取和定位，形成大量有序标记点对，经过一系列几何计算得到初始估计值，经过光束平差法优化得到最终标定结果，通过反投影误
-差反应标定精度。下面对标定的每一步做详细介绍。
+简述了标定算法流程中每一步得到的结果。整体上分为两部分，第一步需要给出每个相机的初始内参、外参估计，以及每个视角下的标记点的二维投影坐标、空间三维坐标，第二步结
+合上述信息，光束平差法优化得到最终标定结果，通过反投影误差反应标定精度。
+\end_layout
+
+\begin_layout Standard
+具体来说，首先需要分割标定球，具体做法是通过边缘检测得到边缘信息，利用RANSAC找到图像中最大的圆，然后利用图像分割算法将标记面片和标定球分割开，接着对每个标
+记面片进行特征点提取和定位，形成大量有序标记点对，经过一系列几何计算得到初始估计值。
+\end_layout
+
+\begin_layout Standard
+RANSAC（RANdom SAmple Consensus）
+\begin_inset CommandInset citation
+LatexCommand cite
+key "fischler1981random"
+
+\end_inset
+
+有Fischler等人于1981年提出，该方法在给定一组样本和模型条件下，拟合找到最合适的模型参数。该方法最大的特点是能够区分内点和外点（噪声点），只有内点才会
+对模型参数有贡献，对噪声具有较强的鲁棒性。该方法首先随机选择尽可能少的样本点来估计模型，被选择的点被认为是内点，其他为外点，对所有外点计算其与模型的契合程度，若
+误差足够小则被归为内点，当所有点都被划分，记录内点数量和误差之和。不断的采样尝试，选择误差最小的模型为最佳匹配。该方法在本文将被多次使用，故在此一并介绍。
+\end_layout
+
+\begin_layout Standard
+下面对标定的每一步做详细介绍。
 \end_layout
 
 \begin_layout Subsubsection
@@ -1039,7 +828,31 @@ name "enu:取点"
 
 \end_inset
 
-随机取三点，计算出通过这三点唯一确定的圆形（如果共线、半径不符合要求、圆超出图像则重新选取三点）；
+随机取三点，计算出通过这三点唯一确定的圆形（如果共线、半径不符合要求、圆超出图像则重新选取三点），由
+\begin_inset Formula 
+\begin{equation}
+\left\{ \begin{aligned}\left(x_{1}-x_{c}\right)^{2}+\left(y_{1}-y_{c}\right)^{2} & =r^{2}\\
+\left(x_{2}-x_{c}\right)^{2}+\left(y_{2}-y_{c}\right)^{2} & =r^{2}\\
+\left(x_{3}-x_{c}\right)^{2}+\left(y_{3}-y_{c}\right)^{2} & =r^{2}
+\end{aligned}
+\right.
+\end{equation}
+
+\end_inset
+
+解得
+\begin_inset Formula 
+\begin{equation}
+\left\{ \begin{aligned}x_{c}= & \frac{\left(x_{1}^{2}+y_{1}^{2}\right)\left(y_{2}-y_{3}\right)+\left(x_{2}^{2}+y_{2}^{2}\right)\left(y_{3}-y_{1}\right)+\left(x_{3}^{2}+y_{3}^{2}\right)\left(y_{1}-y_{2}\right)}{2\left(x_{1}\left(y_{2}-y_{3}\right)+x_{2}\left(y_{3}-y_{1}\right)+x_{3}\left(y_{1}-y_{2}\right)\right)}\\
+y_{c}= & \frac{\left(x_{1}^{2}+y_{1}^{2}\right)\left(x_{3}-x_{2}\right)+\left(x_{2}^{2}+y_{2}^{2}\right)\left(x_{1}-x_{3}\right)+\left(x_{3}^{2}+y_{3}^{2}\right)\left(x_{2}-x_{1}\right)}{2\left(x_{1}\left(y_{2}-y_{3}\right)+x_{2}\left(y_{3}-y_{1}\right)+x_{3}\left(y_{1}-y_{2}\right)\right)}\\
+r= & \sqrt{\left(x_{1}-x_{c}\right)^{2}+\left(y_{1}-y_{c}\right)^{2}}
+\end{aligned}
+\right.
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
@@ -1119,7 +932,7 @@ Z_{cc} & =\frac{R}{r}f
 \begin_inset Newline newline
 \end_inset
 
-这里的主点和焦距均为预设值，主点初始为图像中心，焦距为经验值。
+这里的主点和焦距均为预设值，主点初始为图像中心，焦距根据经验设定。
 \end_layout
 
 \begin_layout Standard
@@ -1256,11 +1069,12 @@ name "标记点示意"
 \end_layout
 
 \begin_layout Standard
-在非线性优化前要给出一个外参的近似结果，以及各个二维点对应的三维点，还有这些三维点在每个视角上的可见性，本节将对这些步骤作详细介绍。
+在非线性优化前要给出一个外参的近似结果，以及各个二维点对应的三维点，还有这些三维点在每个视角上的可见性。估计外参时，相机两两做匹配，依次通过级联得到相对于第一个
+相机的旋转平移矩阵。本节将对这些步骤作详细介绍。
 \end_layout
 
 \begin_layout Paragraph
-由二维点算三维点
+生成点云
 \end_layout
 
 \begin_layout Standard
@@ -1271,19 +1085,45 @@ reference "sub:寻找球心及半径"
 
 \end_inset
 
-节的假设，在已知球心坐标的前提下，根据球上任意一点得二维点坐标，可以很容易地推导出其对应的三维点坐标，只需要做尺度变换即可。具体公式如下：
+节的假设，在已知球心坐标的前提下，根据球上任意一点的二维坐标，可以很容易地推导出其对应的三维点坐标，只需要做尺度变换即可。具体公式见
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:球心"
+
+\end_inset
+
+：
 \begin_inset Formula 
 \begin{equation}
 \left\{ \begin{aligned}Z & =-R\sqrt{1-\frac{\left(x-x_{c}\right)^{2}+\left(y-y_{c}\right)^{2}}{r^{2}}}\\
 X & =\frac{\left(Z+Z_{cc}\right)\left(x-c_{x}\right)}{f_{x}}-X_{cc}\\
 Y & =\frac{\left(Z+Z_{cc}\right)\left(y-c_{y}\right)}{f_{y}}-Y_{cc}
 \end{aligned}
-\right.
+\right.\label{eq:球心}
 \end{equation}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+式中
+\begin_inset Formula $R$
+\end_inset
+
+为标定球实际半径长度，
+\begin_inset Formula $\left(X,Y,Z\right)^{T}$
+\end_inset
+
+坐标以球心为原点。根据式
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:球心"
+
+\end_inset
+
+即可为每个相机生成一组标记点点云。
 \end_layout
 
 \begin_layout Paragraph
@@ -1295,7 +1135,7 @@ Y & =\frac{\left(Z+Z_{cc}\right)\left(y-c_{y}\right)}{f_{y}}-Y_{cc}
 \end_layout
 
 \begin_layout Standard
-本算法在建立世界坐标系时以球心为原点，第一个相机的旋转矩阵为单位阵，因此由
+本算法在建立世界坐标系时以球心为原点，因此由
 \begin_inset Formula 
 \begin{equation}
 \begin{pmatrix}X_{cc}\\
@@ -1303,21 +1143,22 @@ Y_{cc}\\
 Z_{cc}
 \end{pmatrix}=\begin{bmatrix}\mbi R & \mbi T\end{bmatrix}\begin{pmatrix}X_{cw}\\
 Y_{cw}\\
-Z_{cw}
+Z_{cw}\\
+1
 \end{pmatrix}
 \end{equation}
 
 \end_inset
 
 令
-\begin_inset Formula $(X_{cw},Y_{cw},Z_{cw})=(0,0,0)$
+\begin_inset Formula $(X_{cw},Y_{cw},Z_{cw})^{T}=(0,0,0)^{T}$
 \end_inset
 
-可知
-\begin_inset Formula $\mbi T=(X_{cc},Y_{cc},Z_{cc})$
+，可知
+\begin_inset Formula $\mbi T=(X_{cc},Y_{cc},Z_{cc})^{T}$
 \end_inset
 
-。
+，即每个相机的平移向量为球心在该相机坐标系下的三维坐标。
 \end_layout
 
 \begin_layout Paragraph
@@ -1330,12 +1171,12 @@ RANSAC得到旋转矩阵
 
 \begin_layout Standard
 本算法先根据上述平移向量令每个相机坐标系下的三维点云平移到原点为中心，然后以第一个相机为参考求取相对的旋转矩阵。本标定算法可以通过RANSAC鲁棒地找到两个视角
-点云的对应关系，去除噪声点和没有对应点的三维点，从而估计两个相机之间的旋转矩阵，再通过已有相机的旋转矩阵算出相对于第一个相机的旋转矩阵。以下描述了估计两个相机之
-间旋转矩阵的步骤，其中参考相机的旋转矩阵已知。
+标记点云的对应关系，去除噪声点和没有对应点的三维点，从而估计两个相机之间的旋转矩阵，再通过参考相机的旋转矩阵算出相对于第一个相机的旋转矩阵。以下描述了估计两个相
+机之间旋转矩阵的步骤，其中参考相机的旋转矩阵已知。
 \end_layout
 
 \begin_layout Enumerate
-对两个相机下的点云做规范化，使每个点的二范数为1，即强制每个点位于以原点为球心的单位圆上；
+对两个相机下的点云做规范化，使每个点的二范数为1，即强制每个点位于以原点为球心的单位圆上，仅利用点的角度信息；
 \end_layout
 
 \begin_layout Enumerate
@@ -1349,11 +1190,11 @@ name "enu:ransac找点"
 \begin_inset Formula $\mbi P_{r},\mbi P_{e}$
 \end_inset
 
-，估计旋转矩阵。其中
+，用来估计旋转矩阵。其中
 \begin_inset Formula $\mbi P_{r}=\begin{bmatrix}\mbi P_{r1} & \mbi P_{r2}\end{bmatrix},\mbi P_{e}=\begin{bmatrix}\mbi P_{e1} & \mbi P_{e2}\end{bmatrix}$
 \end_inset
 
-。由于旋转矩阵要求是正定阵，故该问题描述为
+。由于旋转矩阵要求是正交矩阵，故该问题描述为
 \begin_inset Formula 
 \begin{equation}
 \begin{aligned}\min_{\mbi R} & \left\Vert \mbi R\mbi P_{r}-\mbi P_{e}\right\Vert _{2}\\
@@ -1392,7 +1233,8 @@ name "enu:ransac数点"
 
 \end_inset
 
-在上一步的旋转矩阵假设下，对剩余点进行测试，对于待测相机点云中每个点，找到其在参考相机点云中距离最近的点，如果小于一定阈值，则认为是内点。统计这样的内点数目。
+在上一步的旋转矩阵假设下，令待测相机点云做旋转变换，此时两个点云应近似重合，对待测相机点云中每个点进行测试：找到其在参考相机点云中距离最近的点，如果小于一定阈值
+，则认为是内点。统计这样的内点数目。
 \end_layout
 
 \begin_layout Enumerate
@@ -1448,9 +1290,9 @@ key "Triggs00bundleadjustment"
 
 \end_inset
 
-，该方法假设给定多个视角下二维点对应三维坐标初始估计，以及每个相机的内参估计，利用这些信息完成一个大的优化问题，包括所有相机的内外参数以及三维点坐标。SBA方法
-使用Levenberg-Marquardt非线性最小二乘算法的常规实现来解决与光束法平差（Bundle Adjustment，BA）相联系的稀疏的大规模的优化问
-题，本文利用了Manolis Lourakis编写的C/C++算法库
+，该方法假设给定多个视角下二维点对应三维坐标初始估计，以及每个相机的内参估计，利用这些信息完成一个优化问题，包括所有相机的内外参数以及三维点坐标，使得重投影误差
+最小。SBA方法使用Levenberg-Marquardt非线性最小二乘算法的常规实现来解决与光束法平差（Bundle Adjustment，BA）相联系的稀疏
+的大规模的优化问题，本文利用了Manolis Lourakis编写的C/C++算法库
 \begin_inset Foot
 status collapsed
 
@@ -1536,8 +1378,59 @@ name "sub:kinect彩色相机和深度相机标定"
 \end_layout
 
 \begin_layout Standard
-kinect本身包含高分辨率（1080P）的彩色相机，以及低分辨率的深度相机，其中深度相机除了可以返回深度图，还可以获得红外成像，通过其红外成像图和彩色图，用传
-统的双目相机标定方法即可完成标定，在此我们采用最普遍的棋盘格标定方法，由于不是本文重点，不再赘述。
+kinect本身包含高分辨率（
+\begin_inset Formula $1920\times1080$
+\end_inset
+
+）的彩色相机，以及低分辨率（
+\begin_inset Formula $512\times424$
+\end_inset
+
+）的深度相机，其中深度相机除了可以返回深度图，还可以获得红外成像，通过其红外成像图和彩色图，用传统的双目相机标定方法即可完成标定，在此我们采用最普遍的棋盘格标定
+方法，由于不是本文重点，不再赘述。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt3/proj.pdf
+	lyxscale 200
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+相机分布示意图（俯视）。示意图下方为被拍摄者正前方，均匀分布有10台高精度彩色相机，其可视区域为淡红色，背面有两台Kinect相机，其可视区域为淡蓝色。Kine
+ct和彩色相机重叠的可视区域颜色为淡紫色，Kinect之间的重叠区域为蓝色。中部的小圆上均匀分布有22个红色点，为标记圆环上的标记点。
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:示意图"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1545,11 +1438,15 @@ kinect本身包含高分辨率（1080P）的彩色相机，以及低分辨率的
 \end_layout
 
 \begin_layout Standard
-在标定物设计时需要考虑两方面：
+在标定物设计时需要考虑三方面：
 \end_layout
 
 \begin_layout Enumerate
-kinect分辨率有限，标记点必须很大，而又必须也能被视野较小的彩色相机看到，因此个数不能太多；
+kinect分辨率有限，标记点必须很大才能被准确定位；
+\end_layout
+
+\begin_layout Enumerate
+标记点必须也能被视野较小的彩色相机看到，彩色相机狭小的视场角限制了标记点的个数；
 \end_layout
 
 \begin_layout Enumerate
@@ -1566,6 +1463,7 @@ status collapsed
 \align center
 \begin_inset Graphics
 	filename figures/chpt3/marker1.jpg
+	lyxscale 40
 	width 100col%
 
 \end_inset
@@ -1577,7 +1475,7 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-多视角不同分辨率相机标定
+彩色相机拍摄图片。标记点个数不能再多，否则将超出拍摄范围。
 \end_layout
 
 \end_inset
@@ -1601,14 +1499,61 @@ name "fig:marker1"
 \end_layout
 
 \begin_layout Standard
-基于以上两方面考虑，本文设计了一种环形编码标记物，如图
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt3/0_10000002_color.jpg
+	lyxscale 20
+	height 5cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt3/0_11111111_color.jpg
+	lyxscale 20
+	height 5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Kinect拍摄图片。该图片分辨率为
+\begin_inset Formula $720\times540$
+\end_inset
+
+，由原始分辨率图片裁剪得到，可以看出标记点较不清晰。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+基于以上三方面考虑，本文设计了一种环形编码标记物，如图
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:marker2"
 
 \end_inset
 
-，该标记物粘贴成圆柱形作为球形标记物的底座，可以与彩色相机同时完成标定采集。为了方便图像分割，实际中将标记编码打印在彩色纸张上，效果见图
+，该标记物粘贴成圆柱形作为标定的底座，可以与彩色相机同时完成标定采集。为了方便图像分割，实际中将标记编码打印在彩色纸张上，效果见图
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:marker1"
@@ -1708,7 +1653,7 @@ reference "fig:marker2"
 \end_inset
 
 所示编码有22位，循环排列时任选5个数字可以唯一确定其位置，也就是说相机只要看到连续5个角点即可唯一确定其所在位置。举例说明，约定编码从0开始，则11111所在
-位置为3，01010所在位置为20。同之前的设计理念相同，除了标记点不再出现任何可能的角点。
+位置为3，01010所在位置为20。同之前的设计理念相同，除了标记点不再出现任何可能的角点，因此每个单元边缘均为弧形。
 \begin_inset Float table
 wide false
 sideways false
@@ -1727,7 +1672,7 @@ status collapsed
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+编码含义
 \end_layout
 
 \end_inset
@@ -1965,8 +1910,8 @@ reference "sec:高精度彩色相机标定"
 \end_inset
 
 所述算法标定得到准确的内外参数。首先在彩色相机拍摄的图片中找到标记点位置，通过RANSAC算法匹配得到相邻视角的对应关系，进而通过相机参数算出点的三维坐标。然后
-利用所有彩色相机得到的三维点坐标拟合出空间中的圆形，从而唯一确定每个标记点的空间位置。最后在kinect拍摄的彩色图片上找到标记点，利用已有的三维坐标，拟合出相
-机参数。接下来对其中的几个关键步骤做详细介绍。
+利用所有彩色相机得到的三维点坐标拟合出空间中的圆形，从而唯一确定每个标记点的空间位置。最后在Kinect拍摄的彩色图片上找到标记点，利用已有的三维坐标，拟合出K
+inect外参。接下来对其中的几个关键步骤做详细介绍。
 \end_layout
 
 \begin_layout Subsubsection
@@ -1981,22 +1926,64 @@ reference "sub:寻找标记点"
 
 \end_inset
 
-类似，首先进行图像分割找出角点存在的区域，然后找到角点作为候选点。接下来要筛选候选点，完成匹配，找到每个点的三维坐标：
+类似，首先进行图像分割，找出角点存在的区域，然后找到角点作为候选点。接下来要筛选候选点，完成匹配，计算出每个点的三维坐标：
 \end_layout
 
 \begin_layout Enumerate
-利用RANSAC算法找到一条点数最多的直线，认为直线穿过的点为正确的标记点，关于RANSAC方法此处不再赘述；
+利用RANSAC算法找到一条点数最多的直线，认为直线穿过的点为正确的标记点：
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+选择任意两点计算得到一条直线，即选定两点为
+\begin_inset Formula $\mbi P_{1},\mbi P_{2}$
+\end_inset
+
+，则直线上任一点
+\begin_inset Formula $\mbi P$
+\end_inset
+
+应满足
+\begin_inset Formula 
+\begin{equation}
+\mbi P=\frac{\left\Vert \mbi P-\mbi P_{1}\right\Vert _{2}}{\left\Vert \mbi P_{1}-\mbi P_{2}\right\Vert _{2}}\left(\mbi P_{1}-\mbi P_{2}\right)+\mbi P_{1}
+\end{equation}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
-确定每个点在编码中的所在位置：同
+计算其他标记点与直线的距离作为误差
+\begin_inset Formula 
+\begin{equation}
+dist=\left\Vert \left\Vert \mbi P-\mbi P_{1}\right\Vert _{2}^{2}-\frac{\left(\left(\mbi P-\mbi P_{1}\right)^{T}\cdot\left(\mbi P_{2}-\mbi P_{1}\right)\right)^{2}}{\left\Vert \mbi P_{1}-\mbi P_{2}\right\Vert _{2}^{2}}\right\Vert _{2}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+误差小于阈值的点作为内点，统计内点个数；
+\end_layout
+
+\begin_layout Enumerate
+重复以上两步，选择使内点个数最多的直线作为最终拟合结果。
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+确定每个点在编码中的所在位置：同图
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "标记点示意"
 
 \end_inset
 
-方法类似，选择相邻两点的中垂线，各延伸一段距离取两点像素，比较像素值确定是0还是1；
+所述方法类似，选择相邻两点的中垂线，各延伸一段距离取两点像素，比较像素值确定是0还是1；
 \end_layout
 
 \begin_layout Enumerate
@@ -2040,8 +2027,15 @@ name "sub:拟合圆形"
 \end_layout
 
 \begin_layout Standard
-为了算出未被彩色相机看到的标记点三维坐标，需要根据已有的三维点拟合出所在的圆形，进而估算出剩余点坐标。在此，本算法限制这些标记点等距的位于一个圆上，这个圆在空间
-中在同一平面。
+由图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:示意图"
+
+\end_inset
+
+可知，Kinect和彩色相机之间重叠区域非常少，无法直接进行匹配。因此需要通过彩色相机算出其可见区域内的标记点真是空间坐标，通过拟合出空间中的三维圆形，从而推断
+出其不可见区域，也就是Kinect可见的标记点的三维坐标。在此，本算法限制这些标记点等距的位于一个圆上，这个圆在空间中在同一平面。
 \end_layout
 
 \begin_layout Enumerate
@@ -2050,7 +2044,7 @@ name "sub:拟合圆形"
 \end_inset
 
 ，理论上这些点满足
-\begin_inset Formula $\mbi P_{i}\cdot\mbi n=t$
+\begin_inset Formula $\mbi P_{i}^{T}\mbi n=t$
 \end_inset
 
 ，其中
@@ -2070,7 +2064,7 @@ name "sub:拟合圆形"
 
 \begin_layout Enumerate
 拟合圆形：以下记待估圆心为
-\begin_inset Formula $\mbi P_{c}=$
+\begin_inset Formula $\mbi P_{c}$
 \end_inset
 
 ，半径为
@@ -2114,15 +2108,42 @@ X_{i}^{2}+Y_{i}^{2}+Z_{i}^{2}+AX_{i}+BY_{i}+CZ_{i}+D=0
 
 \end_inset
 
+也即
+\begin_inset Formula 
+\begin{equation}
+\begin{bmatrix}X_{1} & Y_{1} & Z_{1} & 1\\
+X_{2} & Y_{2} & Z_{2} & 1\\
+ & \vdots\\
+X_{count} & Y_{count} & Z_{count} & 1
+\end{bmatrix}\begin{pmatrix}A\\
+B\\
+C\\
+D
+\end{pmatrix}=-\begin{pmatrix}X_{1}^{2}+Y_{1}^{2}+Z_{1}^{2}\\
+X_{2}^{2}+Y_{2}^{2}+Z_{2}^{2}\\
+\vdots\\
+X_{count}^{2}+Y_{count}^{2}+Z_{count}^{2}
+\end{pmatrix}
+\end{equation}
+
+\end_inset
+
 其中
-\begin_inset Formula $(X_{i},Y_{i},Z_{i})$
+\begin_inset Formula $(X_{i},Y_{i},Z_{i})^{T}$
 \end_inset
 
 为已知点坐标，因此通过最小二乘可以得到
 \begin_inset Formula $A,B,C,D$
 \end_inset
 
-，从而反解出
+，从而根据式
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:求圆心"
+
+\end_inset
+
+反解出
 \begin_inset Formula $(X_{c},Y_{c},Z_{c})$
 \end_inset
 
@@ -2138,7 +2159,7 @@ Y_{c} & =-\frac{B}{2}\\
 Z_{c} & =-\frac{C}{2}\\
 r & =\sqrt{X_{c}^{2}+Y_{c}^{2}+Z_{c}^{2}-D^{2}}
 \end{aligned}
-\right.
+\right.\label{eq:求圆心}
 \end{equation}
 
 \end_inset
@@ -2147,7 +2168,7 @@ r & =\sqrt{X_{c}^{2}+Y_{c}^{2}+Z_{c}^{2}-D^{2}}
 \end_layout
 
 \begin_layout Enumerate
-最后根据已知点估计出未知编码点在圆上的位置，对所有相邻点的夹角取平均即可。
+最后根据已知点估计出未知标记点在圆上的位置，对所有相邻点的夹角取平均即可。
 \end_layout
 
 \begin_layout Subsubsection
