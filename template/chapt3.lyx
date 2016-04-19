@@ -278,7 +278,7 @@ v
 \begin_inset Formula $L(r)=1+\kappa_{1}r^{2}+\kappa_{2}r^{4}+\kappa_{3}r^{6}+\cdots$
 \end_inset
 
-，一般取三项足够，因此
+，一般取三项已足够，因此
 \begin_inset Formula $\kappa_{1},\kappa_{2},\kappa_{3}$
 \end_inset
 

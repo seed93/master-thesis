@@ -544,6 +544,110 @@ name "sub:gopro采集程序"
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt2/gopro_full.jpg
+	lyxscale 10
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+GoPro采集程序界面截图。作坊为控制面板，从上至下依次为参数控制、相机选择、常用控制、wifi连接，右方为日志输出窗格。在常用控制中，可以完成预览、传输及删除
+照片、拍摄、睡眠及唤醒、切换模式等功能。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt2/video.jpg
+	lyxscale 20
+	width 70text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt2/photo.jpg
+	lyxscale 20
+	width 70text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt2/multishot.jpg
+	lyxscale 20
+	width 70text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt2/general.jpg
+	lyxscale 20
+	width 70text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+参数控制面板截图。在不同模式下有不同的设置面板。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 GoPro和前两套系统有所差别，每台相机都可独立运行，通过无线控制器同步采集，不需要采集程序。但是由于GoPro没有实时预览屏幕，需要通过手机App依次连接Go
 Pro实现预览，以调整相机位置，在实际使用中非常不便，以及每台相机参数设置、数据传输都需要手动操作每台相机，费时费力，操作时还会改变相机位置。因此本文为GoPr
 o编写了独立的采集程序。

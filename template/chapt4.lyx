@@ -157,6 +157,457 @@ reference "fig:重建流程"
 
 \end_inset
 
+描绘了三维点云的重建流程。首先对采集到的多视角图片做预处理，即对每个视角图像单独做分割后令多视角两两配对分组，对每对相机，根据双目立体匹配的做法依次完成对极线矫
+正、立体匹配，得到多组三维点云，最后将点云融合、滤波得到最终结果。下面对每一步做详细介绍。
+\end_layout
+
+\begin_layout Subsection
+图片预处理
+\end_layout
+
+\begin_layout Standard
+在立体匹配前需要对图片做预处理，预处理包括两步：图像分割与对极线矫正。
+\end_layout
+
+\begin_layout Subsubsection
+图像分割
+\end_layout
+
+\begin_layout Standard
+同
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:寻找球心及半径"
+
+\end_inset
+
+节类似，拍摄一张没有人物的背景图以辅助图像分割，每个视角得到两张图片独立完成分割。两张图逐像素做cos运算以计算相似度，利用区域生长法得到只包含待匹配人脸的分割
+掩膜。由于头发颜色单一、反光严重，十分不利于立体匹配，且头发重建已交由kinect完成，为避免彩色相机立体匹配因头发产生噪声点，在分割过程中，头发部分同样认为是
+背景点，即使前景和背景差异很大。得到去除背景的图片供后续步骤使用，该操作可以减少误匹配以及提高算法速度。
+\end_layout
+
+\begin_layout Subsubsection
+对极线矫正
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:对极线矫正"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+在双目视觉中，极线矫正是非常重要的一步。对于二维图像上每个点，其代表一个三维点在相机平面的投影，该二维点可以对应空间中多个三维点，这些三维点被约束在由相机光心和
+相机传感器上该点所构成的直线上，这条直线在另一个相机视角下的投影为一条二维直线，也就是说图像上一点在另一视角下的对应点被约束在一条直线上，该直线被称为对极线。根
+据此约束，在立体匹配中可以将对应点的搜索空间由二维降低至一维，大大减小了算法复杂度。而每次寻找对应点时都要重新计算对极线的参数，并在该线上进行遍历找到最佳匹配点
+，如此操作效率极低，通过对极线矫正对图片做变换，可以将对极线转换为一条平行于
+\begin_inset Formula $x$
+\end_inset
+
+轴的直线，且其纵坐标同待匹配点，也就是说经过对极线矫正，点
+\begin_inset Formula $(x_{0},y_{0})$
+\end_inset
+
+在另一视角下的对应点被约束在直线
+\begin_inset Formula $y=y_{0}$
+\end_inset
+
+上，这将省去之后立体匹配时重复计算对极线，并且在搜索匹配点时将内存随机读取转换为了顺序读取，极大加速算法。此外，极线矫正需要用到相机参数，因此可以通过观察矫正后
+图像间接验证相机标定是否准确。
+\end_layout
+
+\begin_layout Standard
+对极线矫正本质是对原相机的投影矩阵几何变换，变换后的相机内参应相同，图像平面共面，仅光心在
+\begin_inset Formula $x$
+\end_inset
+
+轴方向有位移，且具有相同的旋转矩阵。
+\end_layout
+
+\begin_layout Subsection
+金字塔立体匹配
+\end_layout
+
+\begin_layout Standard
+双目立体匹配的任务是指给定两个视角图片，找到尽可能多的匹配点，由于经过
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:对极线矫正"
+
+\end_inset
+
+节的对极线矫正，对应点的纵坐标已保证一致，因此可用
+\begin_inset Formula $x$
+\end_inset
+
+方向上的差来表示对应关系，所有点在
+\begin_inset Formula $x$
+\end_inset
+
+方向上的差构成了视差图。由于立体匹配时图像分辨率很高，尽管已将搜索空间限制在一条直线上，算法复杂度依然很高，且搜索空间太大将导致噪声较多，因此在此采用金字塔模型
+简化算法，增强鲁棒性。
+\end_layout
+
+\begin_layout Standard
+具体来说，对高分辨率双目图像做若干次下采样（倍数为2），得到分辨率不同的多组图片（在此最小分辨率图片为
+\begin_inset Formula $240\times160$
+\end_inset
+
+），仅对最小尺寸图片做全局搜索，即在矫正后的对极线上遍历所有候选点，找到最佳匹配作为视差估计，得到最底层的视差图，分辨率较高的一组图片根据上一层低分辨率视差图进
+行邻域搜索，从分辨率最小的视差图逐步细化，得到最终高分辨率的视差图。在做邻域搜索时，先根据
+\begin_inset Formula $x=x_{0}/2$
+\end_inset
+
+找到其上一层的对应点，若有可用视差值，则根据该值计算得到视差搜索范围，若视差值无效，则在上一层继续向右搜索直到找到有效视差值以计算搜索范围，此时只可以确定右边界
+。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/pyramid.pdf
+	width 80col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+金字塔立体匹配示意
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:金字塔"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+在图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:金字塔"
+
+\end_inset
+
+中，第一行为上一层得到的一行视差图，第二行为当前层待匹配行，以该行第13和第14个像素为例，根据
+\begin_inset Formula $x=x_{0}/2$
+\end_inset
+
+可知第14个像素对应上一层第7个像素，其视差应在
+\begin_inset Formula $4\times2=8$
+\end_inset
+
+附近，给定最大寻找范围
+\begin_inset Formula $m$
+\end_inset
+
+可得第14个像素的视差范围应为
+\begin_inset Formula $\left[8-m,8+m\right]$
+\end_inset
+
+。对于第13个像素，短杠代表视差缺失，其在上一层的对应点未能提供视差信息，故需要其右侧点添加范围约束，即根据上一层的第7个像素的视差值4来约束第13个点的视差范
+围，其视差右边界为
+\begin_inset Formula $4\times2+m$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+金字塔多层立体匹配能够有效地缩小搜索范围，提高效率，减少误匹配。
+\end_layout
+
+\begin_layout Subsubsection
+NCC匹配
+\end_layout
+
+\begin_layout Standard
+双目立体匹配最基本的操作是寻找最佳匹配点，即在候选点中找到相似度最大的点作为最佳匹配。前文所述的对极线矫正、金字塔多层匹配都极大程度上减少了候选点的数量，在此我
+们需要对给定一对点计算其相似度。
+\end_layout
+
+\begin_layout Standard
+立体匹配中有很多种相似度度量，其基本思路是在待匹配点邻域内取若干点构成向量，用向量距离代表相似度。在邻域内取点后可以经过特征提取得到更抽象的特征向量，常用的特征
+提取算法有SIFT（Scale-invariant feature transform
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lowe1999object"
+
+\end_inset
+
+）、SURF（Speeded up robust features
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bay2006surf"
+
+\end_inset
+
+）、HOG（Histograms of oriented gradients
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dalal2005histograms"
+
+\end_inset
+
+）、LBP（Local binary patterns
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ojala1994performance"
+
+\end_inset
+
+）等，为了提高效率，本文并未采用特征提取算法，仅将待匹配点邻域
+\begin_inset Formula $n\times n$
+\end_inset
+
+向量化为一维向量，每个彩色点有3个通道，共
+\begin_inset Formula $3n^{2}$
+\end_inset
+
+维，以下记待匹配点（或左视图点）为
+\begin_inset Formula $\mbi l$
+\end_inset
+
+，候选点（或右视图点）为
+\begin_inset Formula $\mbi r$
+\end_inset
+
+。常用的距离度量有SAD（Sum of Absolute Differences），即向量差的1范数，
+\begin_inset Formula 
+\begin{equation}
+sim_{SAD}=\sum_{i=1}^{3n^{2}}\left|l_{i}-r_{i}\right|
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+SSD（Sum of Squared Differences），即向量差的2范数，
+\begin_inset Formula 
+\begin{equation}
+sim_{SSD}=\sum_{i=1}^{3n^{2}}\left(l_{i}-r_{i}\right)^{2}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+NCC（Normalized Cross correlation），NCC计算相关性时去掉了样本均值，因此即使一个视角图片整体很亮，另一个视角图片整体很暗，也不
+会对结果产生较大影响，NCC对不同视角光照变化较鲁棒，其计算公式为
+\begin_inset Formula 
+\begin{equation}
+sim_{NCC}=\sum_{i=1}^{3n^{2}}\frac{\left(l_{i}-\bar{l}\right)\left(r_{i}-\bar{r}\right)}{\left\Vert \mbi l\right\Vert _{2}\left\Vert \mbi r\right\Vert _{2}}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+SAD和SSD方法中值越小表示越相似，NCC则相反，其取值范围为
+\begin_inset Formula $[-1,1]$
+\end_inset
+
+，1表示完全一致，-1表示毫不相关。为了提高鲁棒性，本文选用NCC作为相似度度量。
+\end_layout
+
+\begin_layout Subsubsection
+约束匹配
+\end_layout
+
+\begin_layout Standard
+在立体匹配中，除了前文所述的对极线约束，还有很多其他约束条件。本小节将着重介绍本文使用的三种约束条件，这些约束条件极大程度减少了误匹配点，提高了匹配精度，优化了
+视差图。
+\end_layout
+
+\begin_layout Enumerate
+平滑约束
+\begin_inset Newline newline
+\end_inset
+
+平滑约束是最显而易见的，在图像处理中，现实世界的图片总具有较强的连续性，即相邻区域的像素值更可能接较接近，与邻域明显有差异的被认为是噪声点。视差图也是如此，也应
+具有连续性，即满足平滑约束。具体来说，若一个点的邻域所有点都没有有效的视差值则被认为是孤点，其视差值也将被认为无效。此外，还要判断其邻域内视差值和该点视差值的差
+异，若差异超过1像素则被认为不一致，当不一致点多余一致点时，该点的视差值同样会被认为无效。
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/smooth1.pdf
+	width 30text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+所有点都没有有效视差值：无效。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/smooth2.pdf
+	width 30text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+一致点有3个，不足一半：无效。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/smooth3.pdf
+	width 30text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+一致点为6个：有效。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+平滑约束示意。中心点为待确认点，邻域范围为
+\begin_inset Formula $3\times3$
+\end_inset
+
+。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+需要注意的是，由于平滑约束会修改已有点的视差值，为避免相互影响，防止产生依赖，首先根据视差值判断是否修改并记录，最后一并修改过滤。
+\end_layout
+
+\begin_layout Enumerate
+顺序约束
+\begin_inset Newline newline
+\end_inset
+
+asdad
+\end_layout
+
+\begin_layout Enumerate
+左右一致性约束
+\begin_inset Newline newline
+\end_inset
+
+asda
+\end_layout
+
+\begin_layout Subsubsection
+亚像素视差优化
+\end_layout
+
+\begin_layout Standard
+图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:重建流程"
+
+\end_inset
+
 描绘了三维点云的重建流程。首先对采集到的10个视角图片做预处理，即图像分割，得到去除背景的图片供后续步骤使用，该操作可以减少误匹配以及提高算法速度。接下来将相机
 分组，相邻两个相机构成一对，对每对相机做同样操作，这些操作包括：
 \end_layout
