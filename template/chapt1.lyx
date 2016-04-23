@@ -77,6 +77,13 @@
 
 \begin_layout Chapter
 引言
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:引言"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -1901,7 +1908,7 @@ key "Bee10"
 
 \end_inset
 
-的方法可以对球形相机系统完成快速的高精度标定，但是对Kinect却不适用。Kinect相机视野较大且分辨率低（
+方法可以对球形相机系统完成快速的高精度标定，但是对Kinect却不适用。Kinect相机视野较大且分辨率低（
 \begin_inset Formula $1920\times1080$
 \end_inset
 
@@ -1922,6 +1929,178 @@ reference "sec:多视角不同分辨率相机标定"
 
 \begin_layout Subsection
 三维重建算法
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:三维重建算法"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+PMVS
+\begin_inset CommandInset citation
+LatexCommand cite
+key "furukawa2010accurate"
+
+\end_inset
+
+是三维重建算法中较经典及完整的解决方案，给定若干视角图片及对应相机参数，通过对关键点匹配得到稀疏点集，然后不断扩散，利用可视化约束过滤错误的匹配点，最终得到三维
+点云。PMVS涉及到的各个步骤都是三维重建中的关键部分，有不同的方法实现和优化。
+\end_layout
+
+\begin_layout Standard
+由于同一场景在不同视角下的图像会有较大差别，三维场景中的光照、物体几何形状和纹理特征及材质、拍摄噪声、相机畸变都会对结果产生较大影响，因此精确匹配是三维重建中的
+关键问题。立体匹配可分为两类，局部匹配和全局匹配。局部匹配包括基于区域、基于特征和基于相位的方法。最常用的是基于关键点匹配后传播，其核心是对图片上点提取合适的特
+征。最简单是直接使用点的原始像素值作为特征，为了增强鲁棒性，学者设计出了各种具有局部不变性的特征描述子。SIFT（Scale-Invariant
+ Feature Transform
+\begin_inset CommandInset citation
+LatexCommand cite
+key "lowe1999object"
+
+\end_inset
+
+）是使用较广的描述子，具有尺度和旋转不变性。其改进版PCA-SIFT
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ke2004pca"
+
+\end_inset
+
+使用主成分分析将SIFT的维度降低，减少了复杂度。GLOH（Gradient Location-Orientation Histogram）也是SIFT的变形，
+使用对数极坐标分级结构替代4象限。SURF（Speeded up robust features
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bay2006surf"
+
+\end_inset
+
+）是一种可用来替代SIFT的更快的描述子，使用方波近似高斯滤波。基于全局的匹配是设计一个合适的能量函数，对全局进行优化，找到全局最优解使能量函数最小。常见的方法
+包括动态规划
+\begin_inset CommandInset citation
+LatexCommand cite
+key "deng2006fast"
+
+\end_inset
+
+、置信传播
+\begin_inset CommandInset citation
+LatexCommand cite
+key "sun2005symmetric"
+
+\end_inset
+
+、图割
+\begin_inset CommandInset citation
+LatexCommand cite
+key "boykov2001fast"
+
+\end_inset
+
+等。
+\end_layout
+
+\begin_layout Standard
+对稠密点云重建，为增强鲁棒性，提高速度，提出了不同方法优化传统匹配方式。Alparone等人
+\begin_inset CommandInset citation
+LatexCommand cite
+key "alparone1995robust"
+
+\end_inset
+
+提出使用金字塔模型实现稠密点的匹配，该方法速度快、鲁棒性较好。Falkenhagen等人
+\begin_inset CommandInset citation
+LatexCommand cite
+key "falkenhagen1997hierarchical"
+
+\end_inset
+
+也采用类似的方法对视差图逐层传播。在立体匹配时通常要人为添加一定约束以减少误匹配，如Lutz
+\begin_inset CommandInset citation
+LatexCommand cite
+key "falkenhagen1994depth"
+
+\end_inset
+
+假设视差图应具有一定连续性。Geiger1等人
+\begin_inset CommandInset citation
+LatexCommand cite
+key "geiger2010efficient"
+
+\end_inset
+
+利用可靠的关键点匹配，添加分段线性的先验做稠密点云重建。
+\end_layout
+
+\begin_layout Standard
+对于多视图三维重建，由于视图对其与点云重建存在误差，点云融合也是一项不可忽略的任务。Merrell等人
+\begin_inset CommandInset citation
+LatexCommand cite
+key "merrell2007real"
+
+\end_inset
+
+给出了一种可视性约束，从每个视角下的点云中选出点以优化该约束，删除误差较大和不满足一致性的点。H
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+{
+\backslash
+"a}
+\end_layout
+
+\end_inset
+
+nsch等人
+\begin_inset CommandInset citation
+LatexCommand cite
+key "hansch2014comparison"
+
+\end_inset
+
+给出了利用各种描述子提取三维特征做点云融合的对比结果。
+\begin_inset CommandInset citation
+LatexCommand cite
+key "kim2009multi"
+
+\end_inset
+
+等人利用ToF相机和多张彩色图片进行点云融合。Tylecek等人
+\begin_inset CommandInset citation
+LatexCommand cite
+key "tylecek2009depth"
+
+\end_inset
+
+将点云融合和相机参数优化相结合，降低了点云对相机参数准确性的依赖。
+\end_layout
+
+\begin_layout Standard
+最后需要用三维点云生成网格模型并上色。Fuhrmann等人
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Fuhrmann_2014"
+
+\end_inset
+
+提出了一种隐函数，可以对有噪声的点云进行鲁棒的表面重建。Ming
+\begin_inset CommandInset citation
+LatexCommand cite
+key "chuang2009estimating"
+
+\end_inset
+
+提出一种求解泊松方程的方法用来做纹理融合，Ran等人
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ran2010Seamless"
+
+\end_inset
+
+提出一种高精度纹理贴图方法，对几何对齐、光照变化有较强的鲁棒性。
 \end_layout
 
 \begin_layout Section
@@ -1932,13 +2111,81 @@ reference "sec:多视角不同分辨率相机标定"
 本文研究目标是制作一套高精度三维人脸数据库，为此制作了一套可以同步采集多角度多光照图片的系统，该系统可以满足基本要求，但过于复杂、成像质量不足，因此制作了第二套
 由单反相机构成的同步采集系统，提高了成像质量和重建精度，并且搭建简单，成本更低。本文工作的核心是提出一种简单精确的多相机标定装置和算法，以及实现了高精度三维重建
 算法，最终采集重建得到了上千个人脸三维模型。此外，搭建了一套由GoPro运动相机构成的环形阵列，用于采集人体多视角图片及人体三维重建，该工作没有用于三维人脸数据
-库的建立，但采用了相似的硬件环境和标定、重建算法，作为论文工作的延伸，在第二章做简要介绍。
+库的建立，但采用了相似的硬件环境和标定、重建算法，本文对重建的人体模型做重光照处理后可以在任意光照下渲染显示。作为论文工作的延伸，在第
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:多视角图像采集系统"
+
+\end_inset
+
+章对该采集系统做简要介绍，在第
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:人脸三维模型重建"
+
+\end_inset
+
+章对重光照算法和渲染结果做介绍。
 \end_layout
 
 \begin_layout Standard
-本文的主要内容如下，第二章介绍了三套多视角图像采集系统，包括硬件系统的搭建和配套控制采集程序，第三章对多相机标定算法做了详细介绍，包括高精度相机阵列标定、不同分
-辨率不同视场角相机标定，三维模型重建算法在第四章做全面介绍，包括立体匹配、三维点云优化、生成mesh模型和纹理贴图，第五章对全文做总结，对论文工作的不足加以讨论
-，对未来工作提出展望。
+本文围绕人脸三维模型重建所涉及的关键技术，包括多视角相机系统搭建与数据采集、多相机标定技术、多视角三维重建技术等关键技术进行研究，章节结构如下：
+\end_layout
+
+\begin_layout Standard
+第
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:引言"
+
+\end_inset
+
+章引言介绍了论文的研究背景和意义，介绍了人脸三维模型重建的相关工作，包括：现有三维人脸数据库、多视角采集系统、相机标定算法、三维重建算法。并给出了本文的章节安排
+。
+\end_layout
+
+\begin_layout Standard
+第
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:多视角图像采集系统"
+
+\end_inset
+
+章介绍了三套多视角图像采集系统，包括每套硬件系统的搭建和配套控制采集程序。
+\end_layout
+
+\begin_layout Standard
+第
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:多相机标定算法"
+
+\end_inset
+
+章简单介绍相机标定原理，着重介绍了两种多相机标定算法，包括高精度相机阵列标定、不同分辨率不同视场角相机标定。
+\end_layout
+
+\begin_layout Standard
+第
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:人脸三维模型重建"
+
+\end_inset
+
+章详细介绍了三维模型重建算法涉及的关键步骤，包括立体匹配、三维点云优化与融合、生成网格模型和纹理贴图，并给出了三套系统的重建结果。
+\end_layout
+
+\begin_layout Standard
+第
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:总结与展望"
+
+\end_inset
+
+章对全文做总结，对论文工作的不足加以讨论，对未来工作提出展望。
 \end_layout
 
 \end_body

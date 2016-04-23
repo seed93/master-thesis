@@ -77,6 +77,13 @@
 
 \begin_layout Chapter
 多视角图像采集系统
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:多视角图像采集系统"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -513,7 +520,7 @@ l可以完成所需的所有功能，省去了自己编写采集程序，这里�
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center

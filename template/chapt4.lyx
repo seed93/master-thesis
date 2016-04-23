@@ -77,6 +77,13 @@
 
 \begin_layout Chapter
 人脸三维模型重建
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:人脸三维模型重建"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -394,36 +401,14 @@ name "sub:初始NCC匹配"
 \end_layout
 
 \begin_layout Standard
-立体匹配中有很多种相似度度量，其基本思路是在待匹配点邻域内取若干点构成向量，用向量距离代表相似度。在邻域内取点后可以经过特征提取得到更抽象的特征向量，常用的特征
-提取算法有SIFT（Scale-invariant feature transform
-\begin_inset CommandInset citation
-LatexCommand cite
-key "lowe1999object"
+立体匹配中有很多种相似度度量，其基本思路是在待匹配点邻域内取若干点构成向量，用向量距离代表相似度。如
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:三维重建算法"
 
 \end_inset
 
-）、SURF（Speeded up robust features
-\begin_inset CommandInset citation
-LatexCommand cite
-key "bay2006surf"
-
-\end_inset
-
-）、HOG（Histograms of oriented gradients
-\begin_inset CommandInset citation
-LatexCommand cite
-key "dalal2005histograms"
-
-\end_inset
-
-）、LBP（Local binary patterns
-\begin_inset CommandInset citation
-LatexCommand cite
-key "ojala1994performance"
-
-\end_inset
-
-）等，为了提高效率，本文并未采用特征提取算法，仅将待匹配点邻域
+节所述，在邻域内取点后可以经过特征提取得到更抽象的特征向量，为了提高效率，本文并未采用特征提取算法，仅将待匹配点邻域
 \begin_inset Formula $n\times n$
 \end_inset
 
