@@ -1,5 +1,5 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
 \textclass thuthesis
@@ -17,13 +17,13 @@
 \font_roman default
 \font_sans default
 \font_typewriter default
+\font_math auto
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
-
 \graphics default
 \default_output_format pdf4
 \output_sync 0
@@ -34,15 +34,24 @@
 \use_hyperref false
 \papersize default
 \use_geometry false
-\use_amsmath 1
-\use_esint 1
-\use_mhchem 1
-\use_mathdots 1
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
 \cite_engine basic
+\cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
+\justification true
 \use_refstyle 1
 \index Index
 \shortcut idx
@@ -82,15 +91,15 @@ resumeitem{个人简历}
 \end_layout
 
 \begin_layout Resume
-19XX年X月生于XX。
+1990年9月9日生于山西省阳泉市。
 \end_layout
 
 \begin_layout Resume
-20XX年X月考入清华大学XX系，就读XX专业。20XX年X月本科毕业，获XX学士学位。
+2009年9月考入清华大学自动化系。2013年7月本科毕业，获工学学士学位。
 \end_layout
 
 \begin_layout Resume
-20XX年X月免试进入清华大学XX系XX研究所，攻读博士学位，从事XX相关研究至今。
+2013年9月免试进入清华大学自动化系控制理论与技术研究所，攻读硕士学位，从事三维重建相关研究至今。
 \end_layout
 
 \begin_layout Resume
@@ -152,7 +161,7 @@ arabic{enumi}]}
 \begin_deeper
 \begin_layout Enumerate
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -165,45 +174,11 @@ itemsep}{6bp}
 
 \end_inset
 
-Fanbo He, Zhengming Zhao, Liqiang Yuan.
- Impact of inverter configuration on energy cost of grid-connected photovoltaic
- systems.
- Renewable Energy, 2012, 41:328-335.
- (SCI源刊，影响因子2.554；EI收录，检索号：20115214638511)
-\end_layout
-
-\begin_layout Enumerate
-文章二
-\end_layout
-
-\begin_layout Enumerate
-文章三
-\end_layout
-
-\begin_layout Enumerate
-文章四
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-按照《指南》要求，文章列表不同部分之间个空行
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-其它文章一
-\end_layout
-
-\begin_layout Enumerate
-其它文章二
+Liang D, Liu Y, Yan W, et al.
+ Accurate 3D reconstruction using multi-phase ToF camera[C]// SPIE/COS Photonics
+ Asia.
+ International Society for Optics and Photonics, 2014:92733J-92733J-7.
+ (EI收录，检索号：20150700527309)
 \end_layout
 
 \begin_layout Standard
@@ -295,13 +270,19 @@ itemsep}{6bp}
 
 \end_inset
 
-发明专利：孙悟空, 猪八戒, 沙和尚.
- 一种保护唐僧的方法.
- 中国: CN ????????? A.
+发明专利：戴琼海, 梁鼎, 刘烨斌.
+ 十亿像素视频采集装置.
+ 中国: CN103281484A.
 \end_layout
 
 \begin_layout Enumerate
-成果二
+软件著作：多视角相机标定工具软件.
+ 登记号: 2016SR048327.
+\end_layout
+
+\begin_layout Enumerate
+软件著作：多视角三维重建工具软件.
+ 登记号: 2016SR048324.
 \end_layout
 
 \begin_layout Standard

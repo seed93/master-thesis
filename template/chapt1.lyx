@@ -1308,6 +1308,19 @@ reference "sub:三维人脸数据库"
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 另一种较好的方法是搭建基于多视角相机阵列系统，利用立体匹配等方法从多视角图片中恢复三维模型。多视角视角采集系统采集速度快，配合多光照控制可以同步采集人物的动态表
 情，同时可以获得高精度的二维图片。接下来将介绍三项较出色的多视角人脸采集系统。
 \end_layout

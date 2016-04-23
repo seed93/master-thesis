@@ -394,16 +394,6 @@ filename "ack.lyx"
 
 \end_layout
 
-\begin_layout Appendix
-\begin_inset CommandInset include
-LatexCommand input
-filename "appdx1.lyx"
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Standard
 \begin_inset CommandInset include
 LatexCommand include

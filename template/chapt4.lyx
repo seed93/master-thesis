@@ -218,6 +218,41 @@ name "sub:对极线矫正"
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/rectify.jpg
+	lyxscale 10
+	height 5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+对极线校正后结果，对应点纵坐标相同。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 对极线矫正本质是对原相机的投影矩阵几何变换，变换后的相机内参应相同，图像平面共面，仅光心在
 \begin_inset Formula $x$
 \end_inset
@@ -337,11 +372,20 @@ reference "fig:金字塔"
 \end_layout
 
 \begin_layout Standard
-金字塔多层立体匹配能够有效地缩小搜索范围，提高效率，减少误匹配。
+金字塔多层立体匹配能够有效地缩小搜索范围，提高效率，减少误匹配。对于每一层的立体匹配，其过程是完全相同的，先做立体匹配得到初始视差图估计，然后根据约束信息删减和
+纠正视差，此时视差图噪声较少，相对准确，但空洞较多，接着重新做一遍立体匹配根据已有的较准确的视差值填充空洞，使用中值滤波做平滑，最后做视差图的亚像素优化，进一步
+提升视差值的准确率，最末用一致性约束校验和去噪。每一层经过这样一系列操作，即可得到较准确的视差图，金字塔立体匹配的输出就是最顶层即分辨率最高的视差图。
 \end_layout
 
-\begin_layout Subsubsection
-NCC匹配
+\begin_layout Subsection
+初始NCC匹配
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:初始NCC匹配"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -439,7 +483,7 @@ SAD和SSD方法中值越小表示越相似，NCC则相反，其取值范围为
 ，1表示完全一致，-1表示毫不相关。为了提高鲁棒性，本文选用NCC作为相似度度量。
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 约束匹配
 \end_layout
 
@@ -448,14 +492,17 @@ SAD和SSD方法中值越小表示越相似，NCC则相反，其取值范围为
 视差图。
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Subsubsection
 平滑约束
-\begin_inset Newline newline
-\end_inset
+\end_layout
 
-平滑约束是最显而易见的，在图像处理中，现实世界的图片总具有较强的连续性，即相邻区域的像素值更可能接较接近，与邻域明显有差异的被认为是噪声点。视差图也是如此，也应
-具有连续性，即满足平滑约束。具体来说，若一个点的邻域所有点都没有有效的视差值则被认为是孤点，其视差值也将被认为无效。此外，还要判断其邻域内视差值和该点视差值的差
-异，若差异超过1像素则被认为不一致，当不一致点多余一致点时，该点的视差值同样会被认为无效。
+\begin_layout Standard
+平滑约束是最显而易见的，在图像处理中，现实世界的图片总具有较强的连续性，即相邻区域的像素值更可能较接近，与邻域明显有差异的被认为是噪声点。视差图也是如此，也应具
+有连续性，即满足平滑约束。具体来说，若一个点的邻域所有点都没有有效的视差值则被认为是孤点，其视差值也将被认为无效。此外，还要判断其邻域内视差值和该点视差值的差异
+，若差异超过1像素则被认为不一致，当不一致点多余一致点时，该点的视差值同样会被认为无效。
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -472,7 +519,7 @@ status collapsed
 \align center
 \begin_inset Graphics
 	filename figures/chpt4/smooth1.pdf
-	width 30text%
+	width 27text%
 
 \end_inset
 
@@ -503,7 +550,7 @@ status collapsed
 \align center
 \begin_inset Graphics
 	filename figures/chpt4/smooth2.pdf
-	width 30text%
+	width 27text%
 
 \end_inset
 
@@ -534,7 +581,7 @@ status collapsed
 \align center
 \begin_inset Graphics
 	filename figures/chpt4/smooth3.pdf
-	width 30text%
+	width 27text%
 
 \end_inset
 
@@ -574,94 +621,1332 @@ status collapsed
 \end_inset
 
 
-\begin_inset Newline newline
-\end_inset
+\end_layout
 
+\begin_layout Standard
 需要注意的是，由于平滑约束会修改已有点的视差值，为避免相互影响，防止产生依赖，首先根据视差值判断是否修改并记录，最后一并修改过滤。
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Subsubsection
 顺序约束
-\begin_inset Newline newline
-\end_inset
-
-asdad
 \end_layout
 
-\begin_layout Enumerate
-左右一致性约束
-\begin_inset Newline newline
+\begin_layout Standard
+顺序约束是一种较特殊的约束，该约束对要重建的真实物理场景有一定限制，并非所有场景都满足顺序约束。简单来说，该约束要求：在一个视角下，若图像上点
+\begin_inset Formula $\left(x_{0},y_{0}\right)$
 \end_inset
 
-asda
+在点
+\begin_inset Formula $\left(x_{1},y_{1}\right)$
+\end_inset
+
+的左侧，则在另一视角下，点
+\begin_inset Formula $\left(x_{0},y_{0}\right)$
+\end_inset
+
+的对应点
+\begin_inset Formula $\left(x_{0}+d_{0},y_{0}\right)$
+\end_inset
+
+同样在点
+\begin_inset Formula $\left(x_{1},y_{1}\right)$
+\end_inset
+
+对应点
+\begin_inset Formula $\left(x_{1}+d_{1},y_{1}\right)$
+\end_inset
+
+左侧，即若
+\begin_inset Formula $x_{0}<x_{1}$
+\end_inset
+
+，则
+\begin_inset Formula $x_{0}+d_{0}<x_{1}+d_{1}$
+\end_inset
+
+。对于不透明凸壳，该约束总是成立。图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:order"
+
+\end_inset
+
+展示了一组不满足该约束的场景图片。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/order.png
+	lyxscale 20
+	height 5cm
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+不满足顺序约束的图像对
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:order"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+对于本文所述场景，人脸和人体均不会产生图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:order"
+
+\end_inset
+
+所示的错位情况，因此总是满足该顺序约束。如图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:order-1"
+
+\end_inset
+
+所示，
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/order_bad.pdf
+	lyxscale 20
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+底部行在上方行寻找匹配点，产生若干违背顺序约束的边。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/order_good.pdf
+	lyxscale 20
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+经过删减，保留最多不交错边。
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+删除交错边示意
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:order-1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+图片某一行的点对应可能是有交错的，由于顺序约束的存在，对于图片每一行，都需要将交错边去掉，应在满足没有交错边的条件下尽可能保留多的边。对于该问题，记某行视差值有
+效的点共有
+\begin_inset Formula $n$
+\end_inset
+
+个，则用
+\begin_inset Formula $n\times n$
+\end_inset
+
+矩阵描述交错边，矩阵第
+\begin_inset Formula $(i,j)$
+\end_inset
+
+个元素若为0表示第
+\begin_inset Formula $i$
+\end_inset
+
+和第
+\begin_inset Formula $j$
+\end_inset
+
+个点满足顺序约束，1表示不满足，由对称性可知该矩阵为对称矩阵。接下来使用贪婪法处理，最终使得该矩阵元素全为0。每次选择产生最多交错边的点，将其置为无效，更新与之
+相连的所有边，直到没有交错边。使用贪婪法删减交错边的伪代码见算法
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "alog:order"
+
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "language=Matlab,numbers=left,basicstyle={\small\ttfamily}"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+function orderConstraint(A, disparity)
+\end_layout
+
+\begin_layout Plain Layout
+
+	% sum A to a column
+\end_layout
+
+\begin_layout Plain Layout
+
+	cross_count = sum(A, 2);
+\end_layout
+
+\begin_layout Plain Layout
+
+	% number of edges to remove
+\end_layout
+
+\begin_layout Plain Layout
+
+	ones_count = sum(cross_count) / 2;
+\end_layout
+
+\begin_layout Plain Layout
+
+	while ones_count
+\end_layout
+
+\begin_layout Plain Layout
+
+		% set the point with most ones to NOMATCH
+\end_layout
+
+\begin_layout Plain Layout
+
+		[max_value, max_idx] = max(cross_count);
+\end_layout
+
+\begin_layout Plain Layout
+
+		cross_count = cross_count - A(:, max_idx);
+\end_layout
+
+\begin_layout Plain Layout
+
+		% update cross_count
+\end_layout
+
+\begin_layout Plain Layout
+
+		cross_count(max_idx) = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+		% update A
+\end_layout
+
+\begin_layout Plain Layout
+
+		A(:, max_idx) = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+		A(max_idx, :) = 0;
+\end_layout
+
+\begin_layout Plain Layout
+
+		% set disparity to NOMATCH
+\end_layout
+
+\begin_layout Plain Layout
+
+		disparity(max_idx) = NOMATCH;
+\end_layout
+
+\begin_layout Plain Layout
+
+	end
+\end_layout
+
+\begin_layout Plain Layout
+
+end
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+顺序约束算法
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "alog:order"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
+左右一致性约束
+\end_layout
+
+\begin_layout Standard
+左右一致性约束是双目立体匹配与其他图像处理相比独有的约束，也是较常用的约束。如
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:初始NCC匹配"
+
+\end_inset
+
+节所述，立体匹配需要对一个视图中的点向另一视图中寻找对应点，该过程没有要求固定参考视图，即参考视图和对应视图可以互换位置得到另一张视差图。因此，两个视图下的图片
+通过两次立体匹配可以得到两张视差图，图片A中点
+\begin_inset Formula $\mbi x$
+\end_inset
+
+对应图片B中
+\begin_inset Formula $\mbi x'$
+\end_inset
+
+，但图片B中
+\begin_inset Formula $\mbi x'$
+\end_inset
+
+在图片A中的对应点并不一定是
+\begin_inset Formula $\mbi x$
+\end_inset
+
+，记为
+\begin_inset Formula $\mbi x''$
+\end_inset
+
+，左右一致性约束要求
+\begin_inset Formula $\mbi x$
+\end_inset
+
+和
+\begin_inset Formula $\mbi x''$
+\end_inset
+
+的误差不能太大，否则应认为该点视差无效。
+\end_layout
+
+\begin_layout Subsection
 亚像素视差优化
 \end_layout
 
 \begin_layout Standard
-图
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:重建流程"
+经过以上步骤得到的视差图已比较准确，噪声点大部分已被删去，但是由于立体匹配时都只能对离散点做匹配，得到的视差值也都是离散值，转换到空间中三维点也会是离散的，这会
+带来较大的不准确性。Campbell等人
+\begin_inset CommandInset citation
+LatexCommand cite
+key "campbell2008using"
 
 \end_inset
 
-描绘了三维点云的重建流程。首先对采集到的10个视角图片做预处理，即图像分割，得到去除背景的图片供后续步骤使用，该操作可以减少误匹配以及提高算法速度。接下来将相机
-分组，相邻两个相机构成一对，对每对相机做同样操作，这些操作包括：
+在2008年提出用亚像素插值方法优化视差图得到了不错的结果。参考Beeler等人
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Bee10"
+
+\end_inset
+
+的方法，利用邻域信息拟合出一个二维平面，对视差值插值做亚像素优化。该方法无法直接得到解析解，需要通过迭代的方式更新至收敛。视差值优化时由两部分组成，图片色彩一致
+性和表面几何一致性，下面分别做介绍。
 \end_layout
 
-\begin_layout Enumerate
-图片对齐。利用标定好的相机参数将两张图片校正对齐，使得待匹配图片的像素点和其在参考图片上的匹配点位于同一行，该操作可以将二维的逐像素匹配降维到一维的像素匹配，大
-大简化了算法复杂度；
-\end_layout
-
-\begin_layout Enumerate
-将对齐好的图片对调整到不同尺寸，构成金字塔模型。金字塔模型是指同样的图片拥有不同的分辨率，先对低分辨率图片做全局立体匹配，在高分辨率图片上结合前一层低分辨率图片
-计算得到的结果快速计算更精确的结果，该方法能在保证精度的前提下大大提高效率；
-\end_layout
-
-\begin_layout Enumerate
-对于每一层的立体匹配，又分为如下几步：
-\end_layout
-
-\begin_deeper
-\begin_layout Enumerate
-NCC匹配：在参考图片和待匹配图片中各选择一点，选取其周围的像素构成两列向量，求取两列向量的夹角，该夹角可以较好地描述两点的相似程度，对光照变化有较好的鲁棒性；
-\end_layout
-
-\begin_layout Enumerate
-约束限定：采用平滑约束、顺序约束、一致性约束三种约束方法对当前得到的视差图进行滤波，筛除错误的匹配点；
-\end_layout
-
-\begin_layout Enumerate
-重新匹配：利用已有的匹配点作为约束，对上一步筛选掉的点进行重新匹配；
-\end_layout
-
-\begin_layout Enumerate
-中值滤波：作用与约束限定类似，删除错误匹配点，对部分未匹配点重新匹配；
-\end_layout
-
-\begin_layout Enumerate
-视差图优化：对视差图亚像素优化，得到精确平滑的视差图
-\end_layout
-
-\end_deeper
-\begin_layout Enumerate
-结合相机参数，将视差图转换为三维点云
-\end_layout
-
-\begin_layout Enumerate
-对点云进行统计学滤波，从三维结构上删除错误点
+\begin_layout Paragraph
+图片色彩一致性
 \end_layout
 
 \begin_layout Standard
-对于kinect相机，可以直接通过深度图和相机参数获得点云，将其点云和立体匹配得到的点云融合得到完整点云，最后通过一系列的滤波和优化方法去除噪声和重复点。
+该项将根据匹配点的NCC相似度值优化。在这里为方便表示，描述二维点坐标时仅用其横坐标表示。记图片A上一点为
+\begin_inset Formula $x$
+\end_inset
+
+，其在图片B上的对应点为
+\begin_inset Formula $x'$
+\end_inset
+
+，仅考虑根据左右两个点进行优化，记点
+\begin_inset Formula $x'$
+\end_inset
+
+左边点为
+\begin_inset Formula $x'_{-1}$
+\end_inset
+
+，右边点为
+\begin_inset Formula $x'_{+1}$
+\end_inset
+
+。由于NCC值范围为
+\begin_inset Formula $\left[-1,1\right]$
+\end_inset
+
+，为方便理解，对NCC值做线性变换得到新的相似度表示
+\begin_inset Formula $\xi=(1-\textrm{NCC})/2$
+\end_inset
+
+，范围为
+\begin_inset Formula $\left[0,1\right]$
+\end_inset
+
+，越接近0表示越相似。记
+\begin_inset Formula $\xi_{-1},\xi_{0},\xi_{+1}$
+\end_inset
+
+依次为
+\begin_inset Formula $x$
+\end_inset
+
+和
+\begin_inset Formula $x'_{-1},x'_{0},x'_{+1}$
+\end_inset
+
+的NCC变换值，则图片色彩一致性项
+\begin_inset Formula $d_{p}$
+\end_inset
+
+计算如下
+\begin_inset Formula 
+\begin{equation}
+d_{p}=\left\{ \begin{aligned} & x-x'-0.5 & \xi_{-1}<\xi_{0},\xi_{+1}\\
+ & x-x'+0.5\frac{\xi_{-1}-\xi_{+1}}{\xi_{-1}+\xi_{+1}-2\xi_{0}} & \xi_{0}<\xi_{-1},\xi_{+1}\\
+ & x-x'+0.5 & \xi_{+1}<\xi_{-1},\xi_{0}
+\end{aligned}
+\right.\label{eq:dp}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+其对应三种情况如图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:subpixel"
+
+\end_inset
+
+，通过插值使得
+\begin_inset Formula $d_{p}$
+\end_inset
+
+尽量接近曲线的最低点，但其边界为
+\begin_inset Formula $\left[x-x'-0.5,x-x'+0.5\right]$
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/sub1.pdf
+	width 27text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $\xi_{-1}<\xi_{0},\xi_{+1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/sub2.pdf
+	width 27text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $\xi_{0}<\xi_{-1},\xi_{+1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/sub3.pdf
+	width 27text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset Formula $\xi_{+1}<\xi_{-1},\xi_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+图片色彩一致性视差值拟合
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:subpixel"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+表面几何一致性
+\end_layout
+
+\begin_layout Standard
+该项描述了点的表面平滑性，在前文已提到现实中三维点应具有较强连续性，因此可认为局域为近似曲面，且各向异性。表面几何一致性项
+\begin_inset Formula $d_{s}$
+\end_inset
+
+计算如下
+\begin_inset Formula 
+\begin{equation}
+d_{s}=\frac{\omega_{x}\left(d_{x-1,y}+d_{x+1,y}\right)+\omega_{y}\left(d_{x,y-1}+d_{x,y+1}\right)}{2\left(\omega_{x}+\omega_{y}\right)}\label{eq:ds}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+其中
+\begin_inset Formula $d_{x-1,y},d_{x+1,y},d_{x,y-1},d_{x,y+1}$
+\end_inset
+
+为点
+\begin_inset Formula $x$
+\end_inset
+
+四邻域点的视差值，
+\begin_inset Formula $\omega_{x}$
+\end_inset
+
+和
+\begin_inset Formula $\omega_{y}$
+\end_inset
+
+计算如下
+\begin_inset Formula 
+\begin{equation}
+\begin{aligned}\omega_{x} & = & \exp\left(-\left(\left|d_{x-1,y}-d_{x,y}\right|-\left|d_{x+1,y}-d_{x,y}\right|\right)^{2}\right)\\
+\omega_{y} & = & \exp\left(-\left(\left|d_{x,y-1}-d_{x,y}\right|-\left|d_{x,y+1}-d_{x,y}\right|\right)^{2}\right)
+\end{aligned}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+使用二阶项对
+\begin_inset Formula $x,y$
+\end_inset
+
+方向视差进行了加权，加强了视差图的平滑性。
+\end_layout
+
+\begin_layout Paragraph
+最终优化视差
+\end_layout
+
+\begin_layout Standard
+最后一步是将上述两项进行加权得到新的视差值。同式
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:ds"
+
+\end_inset
+
+中
+\begin_inset Formula $d_{s}$
+\end_inset
+
+加权方法类似，
+\begin_inset Formula 
+\begin{equation}
+d'=\frac{\omega_{p}d_{p}+\omega_{s}d_{s}}{\omega_{p}+\omega_{s}}
+\end{equation}
+
+\end_inset
+
+这里的权重
+\begin_inset Formula $\omega_{s}$
+\end_inset
+
+是由用户事先指定的平滑项常数，希望视差更加平滑则增大
+\begin_inset Formula $\omega_{s}$
+\end_inset
+
+，
+\begin_inset Formula $\omega_{p}$
+\end_inset
+
+计算与式
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dp"
+
+\end_inset
+
+中
+\begin_inset Formula $d_{p}$
+\end_inset
+
+类似，具体如下
+\begin_inset Formula 
+\begin{equation}
+\omega_{p}=\left\{ \begin{aligned} & \xi_{0}-\xi_{-1} & \xi_{-1}<\xi_{0},\xi_{+1}\\
+ & 0.5\left(\xi_{-1}+\xi_{+1}-2\xi_{0}\right) & \xi_{0}<\xi_{-1},\xi_{+1}\\
+ & \xi_{0}-\xi_{+1} & \xi_{+1}<\xi_{-1},\xi_{0}
+\end{aligned}
+\right.
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+可知，在纹理特征越丰富的区域，
+\begin_inset Formula $\omega_{p}$
+\end_inset
+
+的值会越大，相应平滑越少。视差图的亚像素优化在迭代若干轮后收敛，在本文采用的金字塔方法中，最底层所需迭代次数为30，每上一层增加30次迭代，亚像素优化的效果对比
+见图。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/refine.png
+	lyxscale 10
+	width 27text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+亚像素优化
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/refine_no.png
+	lyxscale 10
+	width 27text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+无亚像素优化
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+亚像素优化效果对比，细节明显更加丰富、清晰。
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:subpixel-refine"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+在实际操作中，需要注意某些视差值存在缺失情况，进而导致
+\begin_inset Formula $\omega_{x}$
+\end_inset
+
+或
+\begin_inset Formula $\omega_{y}$
+\end_inset
+
+为0，或
+\begin_inset Formula $\xi_{-1}+\xi_{+1}-2\xi_{0}=0$
+\end_inset
+
+导致分母为0，应避免除0情况。
 \end_layout
 
 \begin_layout Section
-Mesh模型生成及纹理贴图
+点云优化及融合
+\end_layout
+
+\begin_layout Standard
+经过
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:重建三维点云"
+
+\end_inset
+
+节，利用若干组视角图片得到较准确的视差图，结合由对极线矫正后生成的视差值转深度的变换矩阵
+\begin_inset Formula $Q$
+\end_inset
+
+，即可将视差图上的每一个点转换为三维点，一张视差图形成一个独立的点云，由多组视差图形成多个点云，将所有点云合并即可得到一个完整的三维点云模型。但是，如此生成的点
+云仍有很多问题：
+\end_layout
+
+\begin_layout Enumerate
+此时点云仍有较多噪声，需要进一步过滤；
+\end_layout
+
+\begin_layout Enumerate
+即使视差图已经过亚像素优化，但在三维空间中还不够平滑，需要在三维空间中做进一步处理；
+\end_layout
+
+\begin_layout Enumerate
+各个视角下生成的点云可能不能完美对齐，存在轻微错位；
+\end_layout
+
+\begin_layout Enumerate
+点云不具有法向量，需要生成法向量以表面重建。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/点云流程.pdf
+	lyxscale 50
+	width 90text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+点云后处理流程
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:点云后处理"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+为此，本文按照图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:点云后处理"
+
+\end_inset
+
+所示流程进行点云后处理，其中滤波、删除杂点、移动最小二乘将在本节介绍，有关由点云生成网格模型和纹理贴图在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Mesh模型生成及纹理贴图"
+
+\end_inset
+
+节介绍。
+\end_layout
+
+\begin_layout Subsection
+点云滤波
+\end_layout
+
+\begin_layout Standard
+第一步需要对每个点云单独做滤波、计算法向处理。这里采用两种点云滤波方式，基于统计和基于半径的滤波。
+\end_layout
+
+\begin_layout Description
+基于统计 选择每个三维点周围的一定数量的邻点，计算其均值和方差，如果方差大于一给定阈值，则认为该区域点噪声较多，规律不明显，将该三维点删去。
+\end_layout
+
+\begin_layout Description
+基于半径 统计每个三维点给定半径内的邻点数量，若 数量小于一给定阈值，则认为该点置信度不高，将被删掉。
+\end_layout
+
+\begin_layout Standard
+对每个点云单独处理的操作还包括计算法向，这一步产生的法向将对
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:删除杂点"
+
+\end_inset
+
+节起到重要作用。
+\end_layout
+
+\begin_layout Subsection
+删除杂点
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:删除杂点"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+由于每个点云相对独立，滤波时无法利用其他视角提供的信息，点云合并后还可以通过计算法向的相对关系再次过滤。如图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:del_a"
+
+\end_inset
+
+所示，只有A、B两点被发现，则有两种可能，要么这两点本应该是空间中同一点，要么少检测了一个点，即图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:del_b"
+
+\end_inset
+
+中的C点。在此多数情况为前者，因此选择将这两点保留其一。若存在多个点在某一视角下投影相同且法向朝向该视角相机，则相邻两点之间必须有一点法向朝向相机反方向，如图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:del_b"
+
+\end_inset
+
+中的C点，否则认为这些点产生冲突，仅保留最质量最好的点。在此通过这些点在相邻视角下投影点的NCC值决定其质量。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/del1.pdf
+	lyxscale 10
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+不合理情况，A、B保留其一。
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:del_a"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/del2.pdf
+	lyxscale 10
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+合理的法向。C点的存在使A、B均合理。
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:del_b"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+点A、B、C在2号相机上的投影重合，图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:del_a"
+
+\end_inset
+
+产生了冲突，应该被删掉。
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:del"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+移动最小二乘
+\end_layout
+
+\begin_layout Standard
+移动最小二乘（Moving least squares
+\begin_inset CommandInset citation
+LatexCommand cite
+key "levin1998approximation"
+
+\end_inset
+
+，MLS）是一种用于平滑点云、减少噪声、增强法向一致性的方法。MLS对点云做曲线曲面拟合，找到拟合最好的曲面，在曲面上重新采样得到新的点云。MLS与传统最小二乘
+法不同，有两点改进：
+\end_layout
+
+\begin_layout Enumerate
+无需知道曲线曲面形式，没有采用传统多项式拟合，而是通过系数向量和基函数描述
+\end_layout
+
+\begin_layout Enumerate
+邻域外的点对该点没有任何影响，邻域内的点对该点的作用大小由权重决定，该权重与距离相关，不为常数
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/mls_before.png
+	lyxscale 10
+	width 45text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+MLS前有两层表面
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/mls_after.png
+	lyxscale 10
+	width 45text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+MLS后表面光滑
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+MLS前后对比
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:del-1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+由于得到曲面拟合后可以重新采样，因此MLS也常作为降采样和上采样的方法。通常MLS可以得到较好的曲面拟合，通过重采样即可得到法向一致性较好的新的点云，因此对多个
+点云融合产生的轻微错位也有较好的矫正效果
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.pointclouds.org/documentation/tutorials/resampling.php
+\backslash
+#moving-least-squares
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Subsection
+法向一致性矫正
+\end_layout
+
+\begin_layout Standard
+由MLS可以得到法向量，但由于法向有正负两个方向，根据局部点求得的法向方向不一定符合全局约束，理论上所有点的法向都应朝向任何一个可以观测到该点的相机。在此，对所
+有点遍历检查是否满足该条件，若不满足则令法向反向。
+\end_layout
+
+\begin_layout Section
+网格模型生成及纹理贴图
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Mesh模型生成及纹理贴图"
@@ -676,12 +1961,69 @@ name "sec:Mesh模型生成及纹理贴图"
 \end_layout
 
 \begin_layout Standard
-现有的三角面片生成算法包括移动立方体、泊松重建、旋转球算法等，其中泊松重建使用最普及、效果通常较好。本文拟采用泊松重建的方法得到三角面片模型。进一步可以利用拉普
-拉斯平滑、平均曲率流等方法进行表面平滑，结合图片信息还可以直接在三维面片上让点沿法向移动，优化得到更多细节信息，提高表面重建精度。
+现有的三角面片生成算法包括移动立方体、泊松重建、旋转球算法等，其中泊松重建使用最普及、效果通常较好。本文采用泊松重建的方法得到三角面片模型，之后利用MeshLa
+b
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://meshlab.sourceforge.net/
 \end_layout
 
-\begin_layout Subsection
-表面平滑
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+做网格模型后处理，具体包括：
+\end_layout
+
+\begin_layout Enumerate
+拉普拉斯平滑，对网格模型进一步平滑
+\end_layout
+
+\begin_layout Enumerate
+删除孤立面片
+\end_layout
+
+\begin_layout Enumerate
+删除重复面片
+\end_layout
+
+\begin_layout Enumerate
+删除面积为0的面片
+\end_layout
+
+\begin_layout Enumerate
+对于一条边连接三个面片的情况做清理
+\end_layout
+
+\begin_layout Enumerate
+填补空洞
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+经过以上步骤即可得到最终的网格模型。
 \end_layout
 
 \begin_layout Subsection
@@ -689,7 +2031,645 @@ name "sec:Mesh模型生成及纹理贴图"
 \end_layout
 
 \begin_layout Standard
-最后一步是对三维模型纹理贴图，由于各视角相机有细微差异、拍摄角 度和光照不同，导致各视角图片光照差异较大，因此如何融合不同光照下的 纹理信息也是难点之一。
+最后一步是对三维模型纹理贴图，由于各视角相机有细微差异、拍摄角 度和光照不同，导致各视角图片光照差异较大，因此如何融合不同光照下的纹理信息也是难点之一。本文利用
+Ming
+\begin_inset CommandInset citation
+LatexCommand cite
+key "chuang2009estimating"
+
+\end_inset
+
+提出的方法对不同视角纹理进行了融合，得到了不错的结果。
+\end_layout
+
+\begin_layout Section
+代码实现
+\end_layout
+
+\begin_layout Standard
+第
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:多相机标定算法"
+
+\end_inset
+
+章及本章代码采用C++语言编写，适用于Windows、Linux操作系统，支持x86、x64处理器，在表
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:env"
+
+\end_inset
+
+环境下测试通过。本文工作已在GitHub网站上开源，给出了源代码以及发行版和运行样例，得到了若干网友star和fork
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/seed93/Calibration
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+https://github.com/seed93/reconstruction
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="2">
+<features rotate="0" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+操作系统
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Windows 8.1 64bit
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+开发环境
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Visual Studio 2010/2015
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+CPU
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Intel(R) Core(TM) i5-2400 CPU @3.10Ghz
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+内存
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4GB
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+硬盘
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1GB空闲空间
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+编译及运行环境
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:env"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+结果展示
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/flea1c.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/flea1g.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/flea2c.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/flea2g.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+三维人脸数据库模型样例
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:result2"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/拼图1.jpg
+	lyxscale 10
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+三维人脸数据库。包含55人，每人25个表情，共计1375个三维模型。
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:result1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+基于
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Flea3和kinect相机采集系统"
+
+\end_inset
+
+节所述的相机系统，对55人进行了数据采集，每人按照要求做出规定的25个表情，最终得到了共计1375个三维模型。图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:result1"
+
+\end_inset
+
+截取了一些模型在各个视角下的渲染结果，图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:result2"
+
+\end_inset
+
+随机选出两个模型，展示其不含纹理的渲染结果。
+\end_layout
+
+\begin_layout Standard
+由图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:result2"
+
+\end_inset
+
+可以看出，三维模型细节缺失，表面过度平滑，纹理色彩不真实，这均由于Flea3相机本身拍摄色彩还原不真实、噪声较多、对光照过于敏感导致。经过改进，采用
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:单反相机采集系统"
+
+\end_inset
+
+节搭建的相机系统后，得到了如图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:result3"
+
+\end_inset
+
+所示的模型，这些模型细节更丰富、色彩还原真实，模型质量大大提高。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/1c.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/1g.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/2c.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/2g.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/3c.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/3g.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/4c.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/4g.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset VSpace 1cm
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/5c.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/5g.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/6c.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/6g.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+单反相机系统生成模型
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:result3"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+本文所述重建算法不仅适用于人脸三维重建，图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:3d"
+
+\end_inset
+
+给出了一颗珊瑚的重建结果，该珊瑚只有一元硬币大小，可见本文算法同样适用于其他物体的高精度重建。
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/coral0.png
+	lyxscale 20
+	width 30col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+带纹理珊瑚模型
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/coral1.png
+	lyxscale 20
+	width 30col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+不带纹理模型
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+微观物体三维重建
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:3d"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body

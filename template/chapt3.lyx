@@ -77,6 +77,13 @@
 
 \begin_layout Chapter
 多相机标定算法
+\begin_inset CommandInset label
+LatexCommand label
+name "chap:多相机标定算法"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -323,7 +330,7 @@ v' & = & v\left(1+\kappa_{1}r^{2}+\kappa_{2}r^{4}+\kappa_{3}r^{6}\right)+p_{1}\l
 个点都有可能和另一张图上的所有点对应，这样查找不仅费时而且容易出错，有关得到相机参数后如何通过对齐限制寻找范围将在
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:图片对齐"
+reference "sub:对极线矫正"
 
 \end_inset
 
@@ -936,6 +943,19 @@ Z_{cc} & =\frac{R}{r}f
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 该算法做了如下合理假设：
 \end_layout
 
@@ -949,6 +969,19 @@ Z_{cc} & =\frac{R}{r}f
 \end_inset
 
 近似。
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1511,6 +1544,11 @@ status collapsed
 	lyxscale 20
 	height 5cm
 
+\end_inset
+
+
+\begin_inset space \hspace{}
+\length 0.5cm
 \end_inset
 
 
