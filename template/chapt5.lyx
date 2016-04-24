@@ -86,5 +86,150 @@ name "chap:总结与展望"
 
 \end_layout
 
+\begin_layout Section
+全文工作总结
+\end_layout
+
+\begin_layout Standard
+在本文中，围绕人脸三维模型的采集与重建展开了较系统的研究。为了得到高精度的人脸三维模型，本文选择使用多视角相机阵列系统做立体匹配，该方案精度最高，而且可以采集多
+视角多光照图片，与三维模型构成数据库供研究者在人脸识别、表情识别等应用中使用。基于此目的，本文设计实现了三套多视角采集系统，并编写了配套的同步控制采集软件。为了
+得到每个相机的内外参数，本文提出了一种标定方法可以简便、快捷、准确地得到所有相机参数，此外，还提出一种可以同时标定高分辨率、小视场角相机和低分辨率、大视场角深度
+相机的方法，可以对Kinect和彩色相机同时标定。为了得到高精度三维模型，本文提出并实现一种多视角三维重建算法，不仅可以针对本文所需的三维人脸数据库重建出高精度
+模型，该算法同样适用于人体、文物等其他物体的三维重建。本论文的主要工作成果包括以下几个方面：
+\end_layout
+
+\begin_layout Enumerate
+多相机采集系统。本文共设计实现三套多视角采集系统，第一套系统由10台Flea3工业相机和2台Kinect2深度相机构成，可与120颗可独立控制的LED光源同步触
+发，该系统的优点是硬件同步与光照可控，可以拍摄变光照图片，但图像质量较差、系统复杂；为了提高图像质量，简化系统搭建难度，第二套系统由10台佳能单反相机构成，由6
+台闪光灯同步触发，该系统搭建简单，成像质量较好；第三套系统由16台GoPro相机构成，可对静态人体完成高精度三维重建。
+\end_layout
+
+\begin_layout Enumerate
+多相机标定系统。设计出一种球形标定物，仅拍摄一组照片即可鲁棒地对所有相机完成标定，计算时间仅需要3秒，重投影误差小于0.08像素。为克服不同分辨率、视场角相机系统
+标定难题，设计出一种循环编码标定物，可以在没有重叠区域情况下完成标定。
+\end_layout
+
+\begin_layout Enumerate
+多视角三维重建算法。提出一种基于金字塔多层立体匹配的算法，利用平滑性、顺序性、左右一致性等约束提高视差图质量，通过视差图亚像素优化得到高精度点云模型，最终通过点
+云优化、生成网格模型、网格模型后处理、纹理贴图得到高精度三维网格模型。基于该算法重建出一千多个高精度人脸三维模型，并在微观物体、人体等其他物体上得到较好重建结果
+。
+\end_layout
+
+\begin_layout Section
+未来工作展望
+\end_layout
+
+\begin_layout Standard
+尽管本文已经得到由一千多个模型构成的人脸三维模型数据库，但具体到每个环节，均有一定改进空间，由于时间有限，本文未能对每个环节做到最优，在此提出改进方向供日后继续
+研究。
+\end_layout
+
+\begin_layout Subsection
+硬件采集系统改进
+\end_layout
+
+\begin_layout Standard
+第二套由单反相机构成的系统成像质量已经相对较好，但在使用中发现由于不同人肤质不同，油性皮肤会在闪光灯下产生较强反光，由此引起的反光可从以下两个方面改进：
+\end_layout
+
+\begin_layout Enumerate
+在相机镜头上增加偏振镜，从物理上减少直接反射；
+\end_layout
+
+\begin_layout Enumerate
+调整闪光灯位置，增加柔光罩，使光照更加均匀。
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+该系统还有一个不足之处在于相机触发由闪光灯控制，带来如下问题：
+\end_layout
+
+\begin_layout Enumerate
+光源被限定为闪光灯，且必须在暗室条件下拍摄，很多被拍摄者不习惯，不愿睁开眼睛拍摄；
+\end_layout
+
+\begin_layout Enumerate
+相机曝光时间长达2秒，导致拍摄间隔较长；
+\end_layout
+
+\begin_layout Enumerate
+闪光灯回电时间较长，电池容易耗尽，无法长时间连续拍摄；
+\end_layout
+
+\begin_layout Enumerate
+不支持变光照。
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+一种可能的改进方式是令相机硬件同步触发，调整相机使得反光板抬起时间相同，采用其他可变光照光源代替闪光灯。还有一点，单反相机也存在经常充电的问题，可以采用交流电直
+接供电的方式。
+\end_layout
+
+\begin_layout Subsection
+标定算法改进
+\end_layout
+
+\begin_layout Standard
+本文提出的标定算法在精度上已满足要求，但在易用性上还存在一定改进空间，具体如下：
+\end_layout
+
+\begin_layout Enumerate
+拍摄时需要拍摄放置标定物前后的两组照片，很容易忘记拍摄纯背景照片导致无法标定，可以改进图像分割算法，利用主动轮廓模型、图割等方法直接提取标定物；
+\end_layout
+
+\begin_layout Enumerate
+需要预先制定相机配对顺序，可以通过RANSAC将该过程自动化。
+\end_layout
+
+\begin_layout Subsection
+三维重建算法改进
+\end_layout
+
+\begin_layout Standard
+本文提出的三维重建算法可以在以下几个方面继续改进：
+\end_layout
+
+\begin_layout Enumerate
+立体匹配。可以采用特征点提取对关键点进行匹配，由关键点限制视差搜索范围，加快搜索速度，用动态规划等方法做全局优化，得到较准确的视差图；
+\end_layout
+
+\begin_layout Enumerate
+点云融合。点云融合后的法向一致性矫正可以使用法向传播的方法保证方向正确；
+\end_layout
+
+\begin_layout Enumerate
+网格模型优化。得到网格模型后可以结合图片信息进一步迭代优化，增加网格模型细节信息；
+\end_layout
+
+\begin_layout Enumerate
+结合变光照优化法向，使模型更精细。
+\end_layout
+
 \end_body
 \end_document

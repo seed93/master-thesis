@@ -2657,5 +2657,330 @@ name "fig:3d"
 
 \end_layout
 
+\begin_layout Section
+重光照渲染
+\end_layout
+
+\begin_layout Standard
+本节作为
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:GoPro环形阵列采集系统"
+
+\end_inset
+
+节所述的对应拓展部分，单独在此介绍。由于本文所述三维重建算法运行速度较慢，要利用GoPro拍摄的几百张照片三维重建较不现实，此处采用PhotoScan
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://www.agisoft.cn/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+软件完成模型重建工作，本节仅对模型做重光照渲染。
+\end_layout
+
+\begin_layout Standard
+重光照渲染是指将已有的三维模型置于新的光照环境下，结合环境光照和模型的法向、材质信息进行重新渲染，得到在某一视角下的投影。球面谐波是一种较常用的模型，球谐光照将
+光照方程中的信息使用球谐基函数投影到频谱空间，渲染时还原原始光照方程并对场景着色。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+L\left(\mbi x,\vec{\omega}_{0}\right)=L_{e}\left(\mbi x,\vec{\omega}_{0}\right)+\int_{S}f_{r}\left(\mbi x,\vec{\omega}_{i}\rightarrow\vec{\omega}_{0}\right)L\left(\mbi x',\vec{\omega}_{i}\right)G\left(\mbi x,\mbi x'\right)V\left(\mbi x,\mbi x'\right)d\omega_{i}\label{eq:sh}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+式
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:sh"
+
+\end_inset
+
+是较常用的光照模型，
+\begin_inset Formula $L\left(\mbi x,\vec{\omega}_{0}\right)$
+\end_inset
+
+是点
+\begin_inset Formula $\mbi x$
+\end_inset
+
+在
+\begin_inset Formula $\vec{\omega}_{0}$
+\end_inset
+
+方向上的光密度，
+\begin_inset Formula $L_{e}\left(\mbi x,\vec{\omega}_{0}\right)$
+\end_inset
+
+是物体自身发出的光线，积分下标S表示点
+\begin_inset Formula $\mbi x$
+\end_inset
+
+法向对应的半球空间，
+\begin_inset Formula $f_{r}\left(\mbi x,\vec{\omega}_{i}\rightarrow\vec{\omega_{0}}\right)$
+\end_inset
+
+是双向反射分布函数（Bidirectional Reflectance Distribution Function，BRDF），将光线从
+\begin_inset Formula $\vec{\omega}_{i}$
+\end_inset
+
+方向变换到
+\begin_inset Formula $\vec{\omega}_{0}$
+\end_inset
+
+方向，
+\begin_inset Formula $L\left(\mbi x',\vec{\omega}_{i}\right)$
+\end_inset
+
+是点
+\begin_inset Formula $\mbi x'$
+\end_inset
+
+沿
+\begin_inset Formula $\vec{\omega}_{i}$
+\end_inset
+
+方向到达的光纤，
+\begin_inset Formula $G\left(\mbi x,\mbi x'\right)$
+\end_inset
+
+是点
+\begin_inset Formula $\mbi x,\mbi x'$
+\end_inset
+
+间的几何关系，
+\begin_inset Formula $V\left(\mbi x,\mbi x'\right)$
+\end_inset
+
+是点
+\begin_inset Formula $\mbi x,\mbi x'$
+\end_inset
+
+间的可见性关系（值为0或1）。该方程可利用蒙特卡洛积分方法求解。在本节实现中，人体本身不发光，因此没有
+\begin_inset Formula $L_{e}\left(\mbi x,\vec{\omega}_{0}\right)$
+\end_inset
+
+项，假设人体表面材质只有漫反射分量，令BRDF项为常数。球谐变换有一个特性，如下式
+\begin_inset Formula 
+\begin{equation}
+\int_{S}f_{1}(s)f_{2}(s)ds\approx\int_{S}\tilde{f}_{1}(s)\tilde{f}_{2}(s)ds=\vec{c}_{1}\cdot\vec{c}_{2}=\sum c_{1}^{i}c_{2}^{i}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+利用这一特性，可将
+\begin_inset Formula $L\left(\mbi x',\vec{\omega}_{i}\right)$
+\end_inset
+
+项与其他分开，因此式
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:sh"
+
+\end_inset
+
+简化为
+\begin_inset Formula 
+\begin{equation}
+L\left(\mbi x,\vec{\omega}_{0}\right)=\int_{S}G\left(\mbi x,\mbi x'\right)V\left(\mbi x,\mbi x'\right)d\omega_{i}\label{eq:simple_sh}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+利用简化后的式
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:simple_sh"
+
+\end_inset
+
+即可计算得到每个点的光照强度并用于渲染。渲染 结果如图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:result3-1"
+
+\end_inset
+
+。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/cube.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/lab.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/main.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/sky.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+重光照渲染结果
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/cubemap.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/lab_cube.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/main_cube.jpg
+	lyxscale 10
+	width 25text%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/skyboxsun.jpg
+	lyxscale 5
+	width 25text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+光照环境图
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+重光照结果展示
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:result3-1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \end_body
 \end_document
