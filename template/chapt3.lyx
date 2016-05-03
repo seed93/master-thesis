@@ -88,15 +88,21 @@ name "chap:多相机标定算法"
 
 \begin_layout Standard
 在多相机拍摄系统中，相机参数标定是至关重要的一步，只有获得精确的相机参数。才能进一步完成精确的像素匹配，从而获得准确的三维模型。本章将首先简要介绍相机的成像和标
-定原理，
+定原理。由于在第一套采集系统中包含了高精度小视角的普通彩色相机以及低精度大视角的Kinect二代深度相机，本章将在
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sec:标定流程"
+reference "sec:高精度彩色相机标定"
 
 \end_inset
 
-将介绍标定方案的选择和整体流程。由于在第一套采集系统中包含了高精度小视角的普通彩色相机以及低精度大视角的kinect二代深度相机，本章将通过两个小节来介绍这两种
-相机各自的标定方法，最后一小节介绍了对两个相机系统建立关联的标定算法。其中
+节介绍普通彩色相机之间的标定方法，
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:多视角不同分辨率相机标定"
+
+\end_inset
+
+节介绍对两个相机系统建立关联的标定算法。其中
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:高精度彩色相机标定"
@@ -110,7 +116,7 @@ reference "sec:多视角不同分辨率相机标定"
 
 \end_inset
 
-节的方法适用于不同分辨率、不同焦距相机系统标定。kinect本身包含有深度相机和彩色相机，这二者也具有各自的内参和相对外参，这些参数不会改变，可认为是双目相机系
+节的方法适用于不同分辨率、不同焦距相机系统标定。Kinect本身包含有深度相机和彩色相机，这二者也具有各自的内参和相对外参，这些参数不会改变，可认为是双目相机系
 统，前人已有较多工作，关于这二者的标定本文不再赘述。
 \end_layout
 
@@ -140,8 +146,8 @@ name "sec:相机成像及标定原理"
 \begin_layout Standard
 计算机视觉中有多种相机模型，如针孔模型、无穷远中心模型等。通常认为相机模型是一个针孔模型，也称为线性模型。在该模型假设下，物理空间中的点在相机图像中的成像是一个
 透视成像的过程，该过程可以通过一系列相机参数来描述，参数包括内部参数和外部参数，以下分别简称为内参和外参。内参描述了相机坐标系和图像坐标系的关系，是单个相机本征
-属性，包括主点位置、焦距、畸变系数等，一旦相机本身不发生变化（比如芯片相对镜头的位置、镜头的焦距、焦平面位置等），则内参将保持固定，与其他因素无关。外参描述了相
-机坐标系和世界坐标系的关联，可以将处于同一世界坐标系的不同相机的坐标联系起来，外参由相机之间的相对位置决定。具体来说如下：
+属性，包括主点位置、焦距、畸变系数等，一旦相机本身不发生变化（比如芯片相对镜头的位置、镜头的焦距等），则内参将保持固定，与其他因素无关。外参描述了相机坐标系和世
+界坐标系的关联，可以将处于同一世界坐标系的不同相机的坐标联系起来，外参由相机之间的相对位置决定。具体来说如下：
 \begin_inset Formula 
 \begin{equation}
 \begin{pmatrix}u\\
@@ -462,9 +468,9 @@ reference "fig:marker"
 \end_layout
 
 \begin_layout Standard
-由于本文所述三套系统均为球形相机阵列，因此标定物选择球最为合适，可以让各个角度相机都看到相似图片，使用相同算法标定。球的大小和人头相近，直径为25厘米，可以占据
-大部分画面。标定是将球置于相机阵列的拍摄中心，采集时人头正好替换标定球的位置。标定球选用纯色球，方便后期分割、寻找标定点，尽量选择不反光表面，高光对后期处理影响
-较大。
+由于本文所述三套系统均为曲面相机阵列，因此标定物选择球最为合适，可以让各个角度相机都看到相似图片，使用相同算法标定。球的大小和人头相近，直径为25厘米，可以占据
+大部分画面。标定时将标定球置于相机阵列的拍摄中心，采集时人头正好替换标定球的位置。标定球选用纯色球，方便后期分割、寻找标定点，尽量选择不反光表面，高光对后期处理
+影响较大。
 \end_layout
 
 \begin_layout Standard
@@ -767,7 +773,7 @@ key "fischler1981random"
 
 \end_inset
 
-有Fischler等人于1981年提出，该方法在给定一组样本和模型条件下，拟合找到最合适的模型参数。该方法最大的特点是能够区分内点和外点（噪声点），只有内点才会
+由Fischler等人于1981年提出，该方法在给定一组样本和模型条件下，拟合找到最合适的模型参数。该方法最大的特点是能够区分内点和外点（噪声点），只有内点才会
 对模型参数有贡献，对噪声具有较强的鲁棒性。该方法首先随机选择尽可能少的样本点来估计模型，被选择的点被认为是内点，其他为外点，对所有外点计算其与模型的契合程度，若
 误差足够小则被归为内点，当所有点都被划分，记录内点数量和误差之和。不断的采样尝试，选择误差最小的模型为最佳匹配。该方法在本文将被多次使用，故在此一并介绍。
 \end_layout
@@ -788,13 +794,12 @@ name "sub:寻找球心及半径"
 \end_layout
 
 \begin_layout Standard
-该任务要在一张图片中找到标记球。为了增强鲁棒性，在拍摄标定照片时同时拍摄了没有放置标定球时的纯背景，方便图像分割。因此输入时两张图片，一张有标定球，一张没有，输
+该任务要在一张图片中找到标定球。为了增强鲁棒性，在拍摄标定照片时同时拍摄了没有放置标定球时的纯背景，方便图像分割。因此输入时两张图片，一张有标定球，一张没有，输
 出是球心和半径。
 \end_layout
 
 \begin_layout Standard
-最常用的识别圆形的算法是利用霍夫变换，但经过尝试，发现效果很差，因此本文采用了RANSAC算法，能够鲁棒地找到图片中符合要求的圆形，从而计算球心和半径。具体如下
-：
+最常用的识别圆形的算法是利用霍夫变换，但经过尝试，效果很差，因此本文采用了RANSAC算法，能够鲁棒地找到图片中符合要求的圆形，从而计算球心和半径。具体如下：
 \end_layout
 
 \begin_layout Enumerate
@@ -1040,7 +1045,7 @@ reference "fig:分割标记点"
 
 \end_deeper
 \begin_layout Enumerate
-利用OpenCV的goodFeaturesToTrack函数得到标记点的候选点；
+利用角点检测算法得到标记点的候选点；
 \end_layout
 
 \begin_layout Enumerate
@@ -1183,6 +1188,10 @@ Z_{cw}\\
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Standard
 令
 \begin_inset Formula $(X_{cw},Y_{cw},Z_{cw})^{T}=(0,0,0)^{T}$
 \end_inset
@@ -1400,7 +1409,7 @@ name "sec:多视角不同分辨率相机标定"
 \end_layout
 
 \begin_layout Subsection
-kinect彩色相机和深度相机标定
+Kinect彩色相机和深度相机标定
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:kinect彩色相机和深度相机标定"
@@ -1411,7 +1420,7 @@ name "sub:kinect彩色相机和深度相机标定"
 \end_layout
 
 \begin_layout Standard
-kinect本身包含高分辨率（
+Kinect本身包含高分辨率（
 \begin_inset Formula $1920\times1080$
 \end_inset
 
@@ -1475,7 +1484,7 @@ name "fig:示意图"
 \end_layout
 
 \begin_layout Enumerate
-kinect分辨率有限，标记点必须很大才能被准确定位；
+Kinect分辨率有限，标记点必须很大才能被准确定位；
 \end_layout
 
 \begin_layout Enumerate
@@ -1483,7 +1492,7 @@ kinect分辨率有限，标记点必须很大才能被准确定位；
 \end_layout
 
 \begin_layout Enumerate
-两个kinect相距较远，很难保证标记点大量重叠，因此需要对标记点编码以唯一确定位置。
+两个Kinect相距较远，很难保证标记点大量重叠，因此需要对标记点编码以唯一确定位置。
 \end_layout
 
 \begin_layout Standard
@@ -1644,7 +1653,7 @@ name "fig:marker2"
 \end_layout
 
 \begin_layout Standard
-该编码共有22位，其编码长度基于底座圆柱的半径和kinect能识别的最小角点设定。每个单元分为两个半方半圆的黑白片，片上有圆形记为1，反之为0，具体参照表
+该编码共有22位，其编码长度基于底座圆柱的半径和Kinect能识别的最小角点设定。每个单元分为两个半方半圆的黑白片，片上有圆形记为1，反之为0，具体参照表
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "table:marker"
@@ -1695,7 +1704,7 @@ reference "fig:marker2"
 \begin_inset Float table
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -1764,7 +1773,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt3/偶0_.png
+	filename figures/chpt3/偶0_.jpg
 	lyxscale 20
 	height 2cm
 
@@ -1800,7 +1809,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt3/偶1_.png
+	filename figures/chpt3/偶1_.jpg
 	lyxscale 20
 	height 2cm
 
@@ -1847,7 +1856,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt3/奇0_.png
+	filename figures/chpt3/奇0_.jpg
 	lyxscale 20
 	height 2cm
 
@@ -1883,7 +1892,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt3/奇1_.png
+	filename figures/chpt3/奇1_.jpg
 	lyxscale 20
 	height 2cm
 
@@ -2214,21 +2223,21 @@ r & =\sqrt{X_{c}^{2}+Y_{c}^{2}+Z_{c}^{2}-D^{2}}
 \end_layout
 
 \begin_layout Standard
-kinect内参已由
+Kinect内参已由
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:kinect彩色相机和深度相机标定"
 
 \end_inset
 
-得到，最后任务是根据kinect拍摄图片上的标记点坐标和由
+节得到，最后任务是根据Kinect拍摄图片上的标记点坐标和由
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:拟合圆形"
 
 \end_inset
 
-得到的三维坐标计算出kinect外参矩阵。该步骤直接调用 opencv 的 solvePnP 函数即可
+节得到的三维坐标计算出Kinect外参矩阵。该步骤直接调用 opencv 的 solvePnP 函数即可
 \begin_inset Foot
 status collapsed
 

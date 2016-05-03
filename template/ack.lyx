@@ -1,5 +1,5 @@
-#LyX 2.0 created this file. For more info see http://www.lyx.org/
-\lyxformat 413
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
 \begin_document
 \begin_header
 \textclass thuthesis
@@ -17,13 +17,13 @@
 \font_roman default
 \font_sans default
 \font_typewriter default
+\font_math auto
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
 \font_osf false
 \font_sf_scale 100
 \font_tt_scale 100
-
 \graphics default
 \default_output_format pdf4
 \output_sync 0
@@ -34,15 +34,24 @@
 \use_hyperref false
 \papersize default
 \use_geometry false
-\use_amsmath 1
-\use_esint 1
-\use_mhchem 1
-\use_mathdots 1
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
 \cite_engine basic
+\cite_engine_type default
+\biblio_style plain
 \use_bibtopic false
 \use_indices false
 \paperorientation portrait
 \suppress_date false
+\justification true
 \use_refstyle 1
 \index Index
 \shortcut idx
@@ -66,20 +75,25 @@
 \begin_body
 
 \begin_layout Acknowledge
-感谢已毕业的清华大学计算机系学长薛瑞尼制作的LaTeX模板
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-
-\backslash
-thuthesis{}
+时光荏苒，转眼间硕士研究生三年的学习生涯即将结束，清华园美好的时光令人难忘而留恋。不知不觉，在园子里已经生活了七年，从入学时的懵懂无知、新鲜好奇，到即将毕业时的
+踌躇满志、学有所成，这里的一花一叶、一草一木都见证着我的成长。感恩学校，给了我们广阔的平台和自由的空间，让我们可以在知识的海洋里勇敢翱翔；感恩师长，为我们树立了
+前进的榜样和奋斗的方向，让我们明白人生应有担当。此刻，论文的书写接近尾声，而我也即将离开校园步入社会，回望来时的路，心中感慨万千。
 \end_layout
 
-\end_inset
+\begin_layout Acknowledge
+衷心感谢我的导师刘烨斌先生。刘老师在我的研究生阶段科研工作中给予了很大帮助，指导我确定合适的题目，并在我遇到困难的时候从各方寻求帮助，一点点指引我前进。他渊博的
+知识、严谨的治学态度、一丝不苟的敬业精神给我留下了深刻的印象，他的言传身教将使我受益终身。此外，同样感谢实验室的戴琼海老师。戴老师为实验室把握着整体的研究方向，
+使我们的研究紧跟科技前沿，同时也招纳了优秀的同门兄弟姐妹共同进步。感谢方嵘老师为科研环境搭建、设备采购付出的辛劳，正是有了老师们的无私付出，才使我的毕业论文得以
+顺利完成。
+\end_layout
 
-。
+\begin_layout Acknowledge
+衷心感谢实验室的郭凯文师兄代码实现上给予的帮助，感谢吴立威、刘晓洋、赵漫丹同学在项目实现中提供的支持，感谢实验室所有参与数据库采集制作的同学。在实验室充实而难忘
+的科研经历，正是因为有你们的陪伴而更加精彩，你们是记忆中最美的风景。
+\end_layout
+
+\begin_layout Acknowledge
+最后，感谢我的家人和朋友，是你们的鼓励和支持让我一路走来从未放弃，你们的爱陪伴着我，是我前行的动力和最坚强的后盾。谨以此致谢！
 \end_layout
 
 \end_body

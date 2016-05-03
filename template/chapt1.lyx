@@ -95,7 +95,7 @@ name "chap:引言"
 脸，人脸和指纹一样是独一无二的。为了让计算机分辨出每个人的身份，最理想的方式就是通过人脸识别，具有如下优点：无需昂贵的设备采集，无需接触，容易区分等。人脸识别是
 人脸相关方向较上层的任务，其依赖于人脸检测、关键点检测、属性检测等基础应用。其中人脸检测最早可以追溯到上世纪六七十年代，在半个世纪里人脸检测逐渐成熟，已经做到了
 高精度实时多人检测。人脸识别任务较难，涉及计算机视觉、模式识别、机器学习、深度学习等多领域，其难点在于一个人有不同的打扮、年龄、拍摄环境，从而导致较大差别，而不
-同人又有可能长相接近而难以区分，该课题一直得到各科研机构的密切关注，但目前仍没有一套可以完全实用的解决方案。要让计算机区分人脸，必须有足够的训练数据，带有人物信
+同人又有可能长相接近而难以区分。该课题一直得到各科研机构的密切关注，但目前仍没有一套可以完全实用的解决方案。要让计算机区分人脸，必须有足够的训练数据，带有人物信
 息的照片可以很容易得从网络收集到，目前也有很多数据库，比如LFW
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -179,8 +179,13 @@ key "gupta2010anthropometric,queirolo20103d,kakadiaris2007three,heseltine2008thr
 相关工作
 \end_layout
 
+\begin_layout Standard
+本节将围绕制作人脸三维模型数据库，对其涉及到的相关工作做介绍。首先将介绍已有的数据库，对比各数据库的优缺点，接着介绍几种较出色的多视角采集系统，最后对多相机标定
+算法和三维重建算法做概述。
+\end_layout
+
 \begin_layout Subsection
-三维人脸数据库
+人脸三维模型数据库
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:三维人脸数据库"
@@ -1009,139 +1014,6 @@ name "table:dataset"
 \end_layout
 
 \begin_layout Subsubsection
-中国科学院自动化所
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status collapsed
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename figures/chpt1/CASIA-1.jpg
-	height 5cm
-
-\end_inset
-
-
-\begin_inset Graphics
-	filename figures/chpt1/CASIA-2.JPG
-	height 5cm
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-拍摄环境和模型样本展示
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-该数据库
-\begin_inset CommandInset citation
-LatexCommand cite
-key "xu2004automatic"
-
-\end_inset
-
-采集于2004年8月至9月，使用Minolta Vivid 910型号3D扫描仪采集了123个人物的4624个模型，数据包含了多种光照、多种姿态下的多表情模型，
-并且最终模型包含了纹理信息，是较早也是较规范的三维人脸数据库。该数据库供注册用户下载
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-\begin_inset Flex URL
-status open
-
-\begin_layout Plain Layout
-
-http://biometrics.idealtest.org/findTotalDbByMode.do?mode=Face
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-。该数据库的不足在于仅包含了中国人，人种单一。
-\end_layout
-
-\begin_layout Subsubsection
-BJUT-3D
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status collapsed
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename figures/chpt1/BJUT.jpg
-	lyxscale 10
-	height 4cm
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-拍摄环境和模型样本展示
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-该数据库
-\begin_inset CommandInset citation
-LatexCommand cite
-key "baocai2009bjut"
-
-\end_inset
-
-由北京工业大学使用Cyberware 3030RGB/PS激光扫描仪采集了1200个只有中性表情的中国人脸三维模型，在2009年号称是当时国际上最大的中国人三维
-人脸数据库。其在拍摄时尽量保证了均匀光照，以及各模型之间光照的稳定。最终数据库中有500人数据对外发布，男女个数相同，年龄在16岁~49岁之间不等。该数据库的不
-足在于表情、人种、光照单一。
-\end_layout
-
-\begin_layout Subsubsection
 伊斯坦堡海峡大学
 \begin_inset Foot
 status collapsed
@@ -1283,8 +1155,144 @@ key "faltemier2007using"
 足在于光照、姿态单一。
 \end_layout
 
+\begin_layout Subsubsection
+中国科学院自动化所
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/CASIA-1.jpg
+	height 5cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt1/CASIA-2.JPG
+	height 5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+拍摄环境和模型样本展示
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+该数据库
+\begin_inset CommandInset citation
+LatexCommand cite
+key "xu2004automatic"
+
+\end_inset
+
+采集于2004年8月至9月，使用Minolta Vivid 910型号3D扫描仪采集了123个人物的4624个模型，数据包含了多种光照、多种姿态下的多表情模型，
+并且最终模型包含了纹理信息，是较早也是较规范的三维人脸数据库。该数据库供注册用户下载
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Flex URL
+status open
+
+\begin_layout Plain Layout
+
+http://biometrics.idealtest.org/findTotalDbByMode.do?mode=Face
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+。该数据库的不足在于仅包含了中国人，人种单一。
+\end_layout
+
+\begin_layout Subsubsection
+BJUT-3D
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/BJUT.jpg
+	lyxscale 10
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+拍摄环境和模型样本展示
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+该数据库
+\begin_inset CommandInset citation
+LatexCommand cite
+key "baocai2009bjut"
+
+\end_inset
+
+由北京工业大学使用Cyberware 3030RGB/PS激光扫描仪采集了1200个只有中性表情的中国人脸三维模型，在2009年号称是当时国际上最大的中国人三维
+人脸数据库。其在拍摄时尽量保证了均匀光照，以及各模型之间光照的稳定。最终数据库中有500人数据对外发布，男女个数相同，年龄在16岁~49岁之间不等。该数据库的不
+足在于表情、人种、光照单一。
+\end_layout
+
 \begin_layout Subsection
 多视角图像采集系统
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:多视角图像采集系统"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1295,7 +1303,7 @@ reference "sub:三维人脸数据库"
 
 \end_inset
 
-节中总结了三维人脸数据库的现状，大部分数据库由3D激光扫描仪制作，结果虽然精度很高，但这样采集得到的数据有如下几个缺点：
+节中总结了三维人脸数据库的现状，大部分数据库由3D激光扫描仪制作，虽然模型精度很高，但这样采集得到的数据有如下几个缺点：
 \end_layout
 
 \begin_layout Enumerate
@@ -1328,8 +1336,71 @@ status open
 \end_layout
 
 \begin_layout Standard
-另一种较好的方法是搭建基于多视角相机阵列系统，利用立体匹配等方法从多视角图片中恢复三维模型。多视角视角采集系统采集速度快，配合多光照控制可以同步采集人物的动态表
-情，同时可以获得高精度的二维图片。接下来将介绍三项较出色的多视角人脸采集系统。
+另一种较好的方法是搭建基于多视角相机阵列系统，利用立体匹配等方法从多视角图片中恢复三维模型。多视角采集系统采集速度快，配合多光照控制可以同步采集人物的动态表情，
+同时可以获得高精度的二维图片。接下来将介绍三个较出色的多视角采集系统。
+\end_layout
+
+\begin_layout Subsubsection
+清华大学
+\end_layout
+
+\begin_layout Standard
+清华大学
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wu2009multi"
+
+\end_inset
+
+于2009年制作的半球形多视角采集系统由20台相机构成，分辨率为
+\begin_inset Formula $1024\times768$
+\end_inset
+
+，配有31组独立控制的光源，可以同步采集多光照下的360度视角图片，该系统被应用于人体三维重建，基于该系统，使用初始法向图增强立体匹配，结合光度立体进一步优化深
+度图，从而得到高精度的人体三维模型。
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt1/lab1.jpg
+	lyxscale 20
+	height 5cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt1/lab2.jpg
+	lyxscale 10
+	height 5cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+清华大学多视角采集系统及其拍摄样图
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -1417,7 +1488,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt1/emily.png
+	filename figures/chpt1/emily.jpg
 	height 4cm
 
 \end_inset
@@ -1567,7 +1638,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt1/ETH.png
+	filename figures/chpt1/ETH.jpg
 	lyxscale 20
 	height 5cm
 
@@ -1684,8 +1755,8 @@ reference "sec:相机成像及标定原理"
 \end_layout
 
 \begin_layout Standard
-大部分的标定方法都是对一些特殊设定的物体拍照，被称为标定物，标定物可以提供很鲁棒的信息用于相机匹配，从而计算参数。通常这些标定物有大量容易定位的标记点，这些点满
-足一定的物理约束，通过大量的标记点和这些约束可以计算得到相机参数。对于单相机而言，世界坐标系和相机坐标系可以认为是同一坐标系，因此外参矩阵不需要标定，认为
+大部分的标定方法都是对一些经过精心设计的物体拍照，被称为标定物，标定物可以提供很鲁棒的信息用于相机匹配，从而计算参数。通常这些标定物有大量容易定位的标记点，这些
+点满足一定的物理约束，通过大量的标记点和这些约束可以计算得到相机参数。对于单相机而言，世界坐标系和相机坐标系可以认为是同一坐标系，因此外参矩阵不需要标定，认为
 \begin_inset Formula $\boldsymbol{R}$
 \end_inset
 
@@ -1811,7 +1882,7 @@ https://sites.google.com/site/prclibo/toolbox
 \end_inset
 
 ，该方法使用特殊pattern替换棋盘格，但仍然限制在一个平面上。在本文所述三套系统中，棋盘格平面无法让所有相机同时看到，因此无法使用该方法。此外，该方法需要拍
-摄多达20组照片，操作繁琐。
+摄几十组照片，操作繁琐，计算复杂。
 \end_layout
 
 \begin_layout Subsubsection
@@ -1939,18 +2010,6 @@ name "sub:三维重建算法"
 \end_layout
 
 \begin_layout Standard
-PMVS
-\begin_inset CommandInset citation
-LatexCommand cite
-key "furukawa2010accurate"
-
-\end_inset
-
-是三维重建算法中较经典及完整的解决方案，给定若干视角图片及对应相机参数，通过对关键点匹配得到稀疏点集，然后不断扩散，利用可视化约束过滤错误的匹配点，最终得到三维
-点云。PMVS涉及到的各个步骤都是三维重建中的关键部分，有不同的方法实现和优化。
-\end_layout
-
-\begin_layout Standard
 由于同一场景在不同视角下的图像会有较大差别，三维场景中的光照、物体几何形状和纹理特征及材质、拍摄噪声、相机畸变都会对结果产生较大影响，因此精确匹配是三维重建中的
 关键问题。立体匹配可分为两类，局部匹配和全局匹配。局部匹配包括基于区域、基于特征和基于相位的方法。最常用的是基于关键点匹配后传播，其核心是对图片上点提取合适的特
 征。最简单是直接使用点的原始像素值作为特征，为了增强鲁棒性，学者设计出了各种具有局部不变性的特征描述子。SIFT（Scale-Invariant
@@ -2002,7 +2061,7 @@ key "boykov2001fast"
 \end_layout
 
 \begin_layout Standard
-对稠密点云重建，为增强鲁棒性，提高速度，提出了不同方法优化传统匹配方式。Alparone等人
+对稠密点云重建，为增强鲁棒性，提高速度，学者提出了不同方法优化传统匹配方式。Alparone等人
 \begin_inset CommandInset citation
 LatexCommand cite
 key "alparone1995robust"
@@ -2023,14 +2082,22 @@ key "falkenhagen1994depth"
 
 \end_inset
 
-假设视差图应具有一定连续性。Geiger1等人
+假设视差图应具有一定连续性。Geiger等人
 \begin_inset CommandInset citation
 LatexCommand cite
 key "geiger2010efficient"
 
 \end_inset
 
-利用可靠的关键点匹配，添加分段线性的先验做稠密点云重建。
+利用可靠的关键点匹配，添加分段线性的先验做稠密点云重建。PMVS
+\begin_inset CommandInset citation
+LatexCommand cite
+key "furukawa2010accurate"
+
+\end_inset
+
+是三维重建算法中较经典及完整的解决方案，给定若干视角图片及对应相机参数，通过对关键点匹配得到稀疏点集，然后不断扩散，利用可视化约束过滤错误的匹配点，最终得到三维
+点云。
 \end_layout
 
 \begin_layout Standard
@@ -2108,24 +2175,24 @@ key "Ran2010Seamless"
 \end_layout
 
 \begin_layout Standard
-本文研究目标是制作一套高精度三维人脸数据库，为此制作了一套可以同步采集多角度多光照图片的系统，该系统可以满足基本要求，但过于复杂、成像质量不足，因此制作了第二套
+本文研究目标是制作一套高精度三维人脸数据库，为此制作了一套可以同步采集多视角多光照图片的系统，该系统可以满足基本要求，但过于复杂、成像质量不足，因此制作了第二套
 由单反相机构成的同步采集系统，提高了成像质量和重建精度，并且搭建简单，成本更低。本文工作的核心是提出一种简单精确的多相机标定装置和算法，以及实现了高精度三维重建
 算法，最终采集重建得到了上千个人脸三维模型。此外，搭建了一套由GoPro运动相机构成的环形阵列，用于采集人体多视角图片及人体三维重建，该工作没有用于三维人脸数据
-库的建立，但采用了相似的硬件环境和标定、重建算法，本文对重建的人体模型做重光照处理后可以在任意光照下渲染显示。作为论文工作的延伸，在第
+库的建立，但采用了相似的硬件环境和标定、重建算法，本文对重建的人体模型做重光照处理后可以在任意光照下渲染显示。作为论文工作的延伸，在
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "chap:多视角图像采集系统"
+reference "sec:GoPro环形阵列采集系统"
 
 \end_inset
 
-章对该采集系统做简要介绍，在第
+节对该采集系统做简要介绍，在
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "chap:人脸三维模型重建"
+reference "sec:重光照渲染"
 
 \end_inset
 
-章对重光照算法和渲染结果做介绍。
+节对重光照算法和渲染结果做介绍。
 \end_layout
 
 \begin_layout Standard

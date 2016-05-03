@@ -302,5 +302,97 @@ egroup
 \end_layout
 
 \end_deeper
+\begin_layout Resume
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+resumeitem{科研项目}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+bgroup
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{7bp}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+baselineskip}{16bp}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+renewcommand
+\backslash
+labelenumi{[
+\backslash
+arabic{enumi}]}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+itemsep}{6bp}
+\end_layout
+
+\end_inset
+
+国家自然科学基金项目：三维视觉信息获取与重建 (项目批准号: 61522111)
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+egroup
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
 \end_body
 \end_document

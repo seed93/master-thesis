@@ -94,7 +94,14 @@ reference "sec:重建三维点云"
 
 \end_inset
 
-节，该节详细介绍了通过双目匹配得到三维点云的方法，也是本工作的核心。生成mesh模型以及纹理贴图在
+节，该节详细介绍了通过双目匹配得到三维点云的方法，也是本工作的核心。点云优化和融合、生成网格模型以及纹理贴图在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:点云优化及融合"
+
+\end_inset
+
+节和
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:Mesh模型生成及纹理贴图"
@@ -189,7 +196,7 @@ reference "sub:寻找球心及半径"
 \end_inset
 
 节类似，拍摄一张没有人物的背景图以辅助图像分割，每个视角得到两张图片独立完成分割。两张图逐像素做cos运算以计算相似度，利用区域生长法得到只包含待匹配人脸的分割
-掩膜。由于头发颜色单一、反光严重，十分不利于立体匹配，且头发重建已交由kinect完成，为避免彩色相机立体匹配因头发产生噪声点，在分割过程中，头发部分同样认为是
+掩膜。由于头发颜色单一、反光严重，十分不利于立体匹配，且头发重建已交由Kinect完成，为避免彩色相机立体匹配因头发产生噪声点，在分割过程中，头发部分同样认为是
 背景点，即使前景和背景差异很大。得到去除背景的图片供后续步骤使用，该操作可以减少误匹配以及提高算法速度。
 \end_layout
 
@@ -207,8 +214,8 @@ name "sub:对极线矫正"
 \begin_layout Standard
 在双目视觉中，极线矫正是非常重要的一步。对于二维图像上每个点，其代表一个三维点在相机平面的投影，该二维点可以对应空间中多个三维点，这些三维点被约束在由相机光心和
 相机传感器上该点所构成的直线上，这条直线在另一个相机视角下的投影为一条二维直线，也就是说图像上一点在另一视角下的对应点被约束在一条直线上，该直线被称为对极线。根
-据此约束，在立体匹配中可以将对应点的搜索空间由二维降低至一维，大大减小了算法复杂度。而每次寻找对应点时都要重新计算对极线的参数，并在该线上进行遍历找到最佳匹配点
-，如此操作效率极低，通过对极线矫正对图片做变换，可以将对极线转换为一条平行于
+据此约束，在立体匹配中可以将对应点的搜索空间由二维降低至一维，大大减小了算法复杂度。尽管如此，每次寻找对应点时都要重新计算对极线的参数，并在该线上进行遍历找到最
+佳匹配点，如此操作效率极低，通过对极线矫正对图片做变换，可以将对极线转换为一条平行于
 \begin_inset Formula $x$
 \end_inset
 
@@ -272,7 +279,7 @@ status collapsed
 \end_layout
 
 \begin_layout Standard
-双目立体匹配的任务是指给定两个视角图片，找到尽可能多的匹配点，由于经过
+双目立体匹配的任务是指给定两个视角图片，找到尽可能多的匹配点。由于经过
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:对极线矫正"
@@ -668,7 +675,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt4/order.png
+	filename figures/chpt4/order.jpg
 	lyxscale 20
 	height 5cm
 
@@ -1405,7 +1412,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt4/refine.png
+	filename figures/chpt4/refine.jpg
 	lyxscale 10
 	width 27text%
 
@@ -1437,7 +1444,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt4/refine_no.png
+	filename figures/chpt4/refine_no.jpg
 	lyxscale 10
 	width 27text%
 
@@ -1502,6 +1509,13 @@ name "fig:subpixel-refine"
 
 \begin_layout Section
 点云优化及融合
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:点云优化及融合"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1810,12 +1824,12 @@ status collapsed
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt4/mls_before.png
+	filename figures/chpt4/mls_before.jpg
 	lyxscale 10
 	width 45text%
 
@@ -1842,12 +1856,12 @@ MLS前有两层表面
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt4/mls_after.png
+	filename figures/chpt4/mls_after.jpg
 	lyxscale 10
 	width 45text%
 
@@ -2567,12 +2581,12 @@ status collapsed
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt4/coral0.png
+	filename figures/chpt4/coral0.jpg
 	lyxscale 20
 	width 30col%
 
@@ -2599,12 +2613,12 @@ status collapsed
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/chpt4/coral1.png
+	filename figures/chpt4/coral1.jpg
 	lyxscale 20
 	width 30col%
 
@@ -2659,6 +2673,115 @@ name "fig:3d"
 
 \begin_layout Section
 重光照渲染
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:重光照渲染"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/gopro_1c.jpg
+	lyxscale 20
+	height 4cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/gopro_1g.jpg
+	lyxscale 20
+	height 4cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/gopro_2c.jpg
+	lyxscale 20
+	height 4cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/gopro_2g.jpg
+	lyxscale 20
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/chpt4/gopro_3c.jpg
+	lyxscale 20
+	height 4cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/gopro_3g.jpg
+	lyxscale 20
+	height 4cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/gopro_4c.jpg
+	lyxscale 20
+	height 4cm
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/chpt4/gopro_4g.jpg
+	lyxscale 20
+	height 4cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+人体三维模型
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:result2-1"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2815,14 +2938,22 @@ L\left(\mbi x,\vec{\omega}_{0}\right)=\int_{S}G\left(\mbi x,\mbi x'\right)V\left
 \end_layout
 
 \begin_layout Standard
-利用简化后的式
+使用球谐函数近似
+\begin_inset Formula $G\left(\mbi x,\mbi x'\right)$
+\end_inset
+
+和
+\begin_inset Formula $V\left(\mbi x,\mbi x'\right)$
+\end_inset
+
+，即可求得简化后的式
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:simple_sh"
 
 \end_inset
 
-即可计算得到每个点的光照强度并用于渲染。渲染 结果如图
+的近似解用于渲染。渲染 结果如图
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:result3-1"

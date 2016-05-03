@@ -26,7 +26,7 @@
 \font_tt_scale 100
 \graphics default
 \default_output_format pdf4
-\output_sync 0
+\output_sync 1
 \bibtex_command default
 \index_command default
 \float_placement tbph
@@ -87,8 +87,15 @@ name "chap:多视角图像采集系统"
 \end_layout
 
 \begin_layout Standard
-在前文已介绍几种国内外多种多视角图像采集系统，各有千秋，本章将介绍三套多视角相机采集系统，能够针对不同场合和需求完成多视角采集。第一套采集系统能够在多种光照条件
-下同步采集多个视角图片。该系统包含硬件系统实现以及为本系统特别编写的采集控制程序，在 
+在
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "chap:多视角图像采集系统"
+
+\end_inset
+
+已介绍几种国内外多种多视角图像采集系统，各有千秋，本章将介绍三套多视角相机采集系统，能够针对不同场合和需求完成多视角采集。第一套采集系统能够在多种光照条件下同步
+采集多视角图片。该系统包含硬件系统实现以及为本系统编写的采集控制程序，在 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:硬件系统介绍"
@@ -128,7 +135,7 @@ reference "sub:gopro采集程序"
 \end_layout
 
 \begin_layout Standard
-三套多视角相机采集系统有各自的优势和特点，但其基本特征是相同的，具体来说，需要具有如下特征：
+三套多视角采集系统有各自的优势和特点，但其基本特征是相同的，具体来说，需要具有如下特征：
 \end_layout
 
 \begin_layout Enumerate
@@ -163,7 +170,7 @@ status open
 \end_layout
 
 \begin_layout Section
-Flea3和Kinect2相机采集系统
+Flea3和Kinect2采集系统
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:Flea3和kinect相机采集系统"
@@ -296,7 +303,7 @@ name "sec:采集程序介绍"
 \end_layout
 
 \begin_layout Enumerate
-实时显示所有视角图像，包括彩色相机和Kinect相机
+实时显示所有视角图像，包括彩色相机和Kinect
 \end_layout
 
 \begin_layout Enumerate
@@ -325,11 +332,12 @@ status open
 \end_layout
 
 \begin_layout Standard
-需要多台主机间网络传输，一方面是因为目前在一台电脑上只能部署一台Kinect二代相机，因此必须使用两台主机以配合两台Kinect；另一方面是因为Flea3相机采
-用USB3.0传输，带宽占用非常大，一台主机主板和内存无法满足如此大的带宽需求，需要将10台相机分别部署在两台主机。采集程序包括两部分，其一为使用MFC编写的人机
-交互界面，也被称为服务端，其二为底层控制相机的客户端，客户端同时支持Flea3相机和Kinect，在每台主机上只需运行客户端即可，其中一台主机同时可作为服务端，
-打开GUI程序即可完成各项操作。服务端GUI程序可以在左上方输出所有操作的执行状态，在左下方列出所有连接的相机IP和端口号，相机个数可以自适应，默认将显示所有已
-连接相机。每台相机都可以单独实时预览和控制，支持软件触发和硬件触发，其中硬件触发和LED灯的控制均通过串口通信，向外置的定制采集板发送信号。
+需要多台主机间网络传输，一方面是由于Kinect SDK自身限制，目前在一台电脑上只能部署一台Kinect，因此必须使用两台主机以配合两台Kinect；另一方面
+是因为Flea3相机采用USB3.0传输，带宽占用非常大，一台主机主板和内存无法满足如此大的带宽需求，需要将10台相机分别部署在两台主机。采集程序包括两部分，其一
+为使用MFC编写的人机交互界面，也被称为服务端，其二为底层控制相机的客户端，客户端同时支持Flea3相机和Kinect，在每台主机上只需运行客户端即可，其中一台
+主机同时可作为服务端，打开GUI程序即可完成各项操作。服务端GUI程序可以在左上方输出所有操作的执行状态，在左下方列出所有连接的相机IP和端口号，相机个数可以自
+适应，默认将显示所有已连接相机。每台相机都可以单独实时预览和控制，支持软件触发和硬件触发，其中硬件触发和LED灯的控制均通过串口通信，向外置的定制采集板发送信号
+。
 \end_layout
 
 \begin_layout Standard
@@ -436,8 +444,8 @@ reference "sec:Flea3和kinect相机采集系统"
 
 \end_inset
 
- 节所述系统拍摄图片质量有限，系统复杂，为进一步提升三维重建精度，简化拍摄流程，提出了本节所述的采集系统。该系统包含10台佳能D1200单反相机，配备有5台YN
-560IV型号闪光灯和1台YN500EV型号闪光灯。所有相机通过USB连接到一台电脑主机，由 
+ 节所述系统拍摄图片质量有限，系统复杂，为进一步提升三维重建精度，简化拍摄流程，提出了本节所述的采集系统。该系统包含10台佳能D1200单反相机，配有18-55
+毫米镜头（采集时采用55毫米端），配备有5台YN560IV型号闪光灯和1台YN500EX型号闪光灯。所有相机通过USB连接到一台电脑主机，由 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:软件系统"
@@ -448,7 +456,7 @@ reference "sub:软件系统"
 \end_layout
 
 \begin_layout Enumerate
-软件同步：由采集程序同步发送拍摄指令完成同步拍摄，该方法延迟最大，误差可达到1秒，对于高精度重建完全不可取。
+软件同步：由采集程序同步发送拍摄指令完成同步拍摄，该方法延迟最大，误差可达到1秒，被拍摄者在1秒内无法保证绝对静止，因此该方案对于高精度重建完全不可取。
 \end_layout
 
 \begin_layout Enumerate
@@ -460,7 +468,7 @@ reference "sub:软件系统"
 
 \begin_layout Enumerate
 本文采用如下方式同步：拍摄时处于暗室中，用软件触发所有相机拍摄，曝光2秒，其中一台主控相机连接主控闪光灯，曝光1秒，用后帘同步触发闪光灯，主控闪光灯同步触发其余
-闪光灯，由于所有相机接收到光线的时间是严格同步的，以此达到同步拍摄的目的。
+闪光灯，闪光灯之间的同步时间为1/8000秒，因此所有相机接收到光线的时间是近似同步的，以此达到同步拍摄的目的。
 \end_layout
 
 \begin_layout Standard
@@ -477,7 +485,8 @@ status open
 \end_layout
 
 \begin_layout Standard
-光照方面，YN500EV作为主控闪光灯置于人脸正前方，另有一台辅助闪光灯置于人脸前下方为下巴补光，另有四台均匀置于两侧。
+光照方面，YN500EX作为主控闪光灯置于人脸正前方，另有一台辅助闪光灯置于人脸前下方为下巴补光，另有四台均匀置于两侧，每台闪光灯的闪光指数为53，可以提供足够
+光照以减少图像噪声。
 \end_layout
 
 \begin_layout Subsection
@@ -751,8 +760,8 @@ o编写了独立的采集程序。
 
 \begin_layout Standard
 GoPro采用wifi发送控制信号，每台GoPro相机产生一个wifi热点。GoPro官方的无线控制器采用了特殊的软硬件设置使得其可以同时连接多个Gopro相机
-，在无法获得其原理的条件下，每台GoPro都需要一个独立的无线网卡连接，因此本系统配置有16块无线网卡，通过windows脚本完成自动连接以及固定ip设置。在网
-上查找到一些资料
+，该控制器只具有同步拍照功能。在无法获得控制器原理的条件下，本系统为每台GoPro配置一个独立的无线网卡连接，因此本系统配置有16块无线网卡，通过windows
+脚本完成自动连接以及固定ip设置。在网上查找到一些资料
 \begin_inset Foot
 status collapsed
 
@@ -772,10 +781,10 @@ https://github.com/KonradIT/goprowifihack
 
 \end_inset
 
-可以完成GoPro的基本操作，这些指令由爱好者对网络传输数据分析得到，受此启发，本文采用相同解析数据包的方法，分析出更多控制指令。使用python完成了GUI的
+可以完成GoPro的基本操作，这些指令由爱好者对网络传输数据分析得到，受此启发，本文采用相同解析数据包的方法，分析出更多控制指令。GUI采集程序基于python
 编写，该采集程序支持多相机实时预览、相机关机与唤醒、删除和下载文件、各项参数设定等。通过对相机发送请求指令，用ffmpeg软件解析UDP协议中的流媒体，从而实现
 了实时预览，需要注意的是，实时预览时需要定时向GoPro发送维持指令，防止掉线。GoPro关机后进入低功耗模式，此时wifi并未关闭，可以通过发送特定指令唤醒。
-此处需要注意的是，需要定时向GoPro发送状态查询指令，以防止其自动关机。该采集程序极大程度简化了采集流程，减少了人工工作量，加快了采集速度。
+此外，为防止相机自动关机，需要定时向GoPro发送状态查询指令。该采集程序极大程度简化了采集流程，减少了人工工作量，加快了采集速度。
 \end_layout
 
 \end_body
