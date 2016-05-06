@@ -90,12 +90,12 @@ name "chap:多视角图像采集系统"
 在
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "chap:多视角图像采集系统"
+reference "sub:多视角图像采集系统"
 
 \end_inset
 
-已介绍几种国内外多种多视角图像采集系统，各有千秋，本章将介绍三套多视角相机采集系统，能够针对不同场合和需求完成多视角采集。第一套采集系统能够在多种光照条件下同步
-采集多视角图片。该系统包含硬件系统实现以及为本系统编写的采集控制程序，在 
+节已介绍几种国内外多种多视角图像采集系统，各有千秋，本章将介绍三套多视角相机采集系统，能够针对不同场合和需求完成多视角采集。第一套采集系统能够在多种光照条件下同
+步采集多视角图片。该系统包含硬件系统实现以及为本系统编写的采集控制程序，在 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:硬件系统介绍"
