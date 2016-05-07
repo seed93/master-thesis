@@ -172,7 +172,7 @@ key "gupta2010anthropometric,queirolo20103d,kakadiaris2007three,heseltine2008thr
 我们手边，可以轻松获得，但事实上多数工作仍停留在科研阶段，而已有的消费级产品只能做到所谓的3D采集和显示，即同时采集两个视角照片并分别显示给用户的左右眼，让用户
 感觉自己采集到的是立体场景，其没有对场景做任何建模，不存在真实的三维模型。因此离直接采集到三维模型还有一定距离，但我们相信这一技术指日可待。然而，在三维模型能够
 轻松获得之前，科研工作者需要基于现有的技术条件获取尽量多的人脸三维模型来提升诸如人脸识别、表情识别等工作的结果。现有的三维人脸数据库十分有限，质量参差不齐，大多
-没有耳朵、下巴等关键部位，这限制了进一步的研究。因此，我们需要制作一套能够满足科研需要的人脸三维模型数据库。
+缺少耳朵、下巴等关键部位，限制了进一步的研究。因此，我们需要制作一套能够满足科研需要的人脸三维模型数据库。
 \end_layout
 
 \begin_layout Section
@@ -210,7 +210,19 @@ reference "table:dataset"
 \begin_inset Float table
 wide false
 sideways false
-status collapsed
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+三维人脸数据库汇总
+\end_layout
+
+\end_inset
+
+
+\end_layout
 
 \begin_layout Plain Layout
 \align center
@@ -990,15 +1002,6 @@ key "mian2009shade,mian2011illumination"
 \end_inset
 
 
-\begin_inset Caption Standard
-
-\begin_layout Plain Layout
-三维人脸数据库汇总
-\end_layout
-
-\end_inset
-
-
 \begin_inset CommandInset label
 LatexCommand label
 name "table:dataset"
@@ -1059,7 +1062,7 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-模型样本展示
+伊斯坦堡海峡大学模型样本展示
 \end_layout
 
 \end_inset
@@ -1080,8 +1083,8 @@ key "savran2008bosphorus"
 
 \end_inset
 
-使用Inspeck Mega Capturor II 3D扫描仪采集了105人物的4652个三维模型，包含了34种表情和13种姿态，最特别的是包含四种不同遮挡。
-该数据库的不足在于光照单一，模型没有下巴、耳朵等部位。
+使用Inspeck Mega Capturor II 3D扫描仪采集了105人的共计4652个三维模型，包含了34种表情和13种姿态，最特别的是包含四种不同遮挡
+。该数据库的不足在于光照单一，模型没有下巴、耳朵等部位。
 \end_layout
 
 \begin_layout Subsubsection
@@ -1130,7 +1133,7 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-模型样本展示
+ND2006模型样本展示
 \end_layout
 
 \end_inset
@@ -1187,7 +1190,7 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-拍摄环境和模型样本展示
+中国科学院拍摄环境和模型样本展示
 \end_layout
 
 \end_inset
@@ -1258,7 +1261,7 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-拍摄环境和模型样本展示
+BJUT-3D拍摄环境和模型样本展示
 \end_layout
 
 \end_inset
@@ -1279,9 +1282,9 @@ key "baocai2009bjut"
 
 \end_inset
 
-由北京工业大学使用Cyberware 3030RGB/PS激光扫描仪采集了1200个只有中性表情的中国人脸三维模型，在2009年号称是当时国际上最大的中国人三维
-人脸数据库。其在拍摄时尽量保证了均匀光照，以及各模型之间光照的稳定。最终数据库中有500人数据对外发布，男女个数相同，年龄在16岁~49岁之间不等。该数据库的不
-足在于表情、人种、光照单一。
+由北京工业大学使用Cyberware 3030RGB/PS激光扫描仪采集了1200个只有中性表情的中国人三维人脸模型，在2009年号称是当时国际上最大的中国人三
+维人脸数据库。其在拍摄时尽量保证了均匀光照，以及各模型之间光照的稳定。最终数据库中有500人数据对外发布，男女个数相同，年龄在16岁~49岁之间不等。该数据库的
+不足在于表情、人种、光照单一。
 \end_layout
 
 \begin_layout Subsection
@@ -1319,7 +1322,7 @@ reference "sub:三维人脸数据库"
 \end_layout
 
 \begin_layout Enumerate
-无法移动扫描仪以得到完整人头
+无法移动扫描仪以得到完整人像
 \end_layout
 
 \begin_layout Standard
@@ -1444,10 +1447,6 @@ name "fig:emily"
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
@@ -1483,7 +1482,7 @@ key "ma2007rapid"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -1508,7 +1507,7 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Light Stage 5采集效果展示，右图中人物纹理清晰可见。
+Light Stage 5采集效果展示
 \end_layout
 
 \end_inset
@@ -1756,7 +1755,7 @@ reference "sec:相机成像及标定原理"
 
 \begin_layout Standard
 大部分的标定方法都是对一些经过精心设计的物体拍照，被称为标定物，标定物可以提供很鲁棒的信息用于相机匹配，从而计算参数。通常这些标定物有大量容易定位的标记点，这些
-点满足一定的物理约束，通过大量的标记点和这些约束可以计算得到相机参数。对于单相机而言，世界坐标系和相机坐标系可以认为是同一坐标系，因此外参矩阵不需要标定，认为
+点满足一定的物理约束，通过大量的标记点和这些约束可以计算得到相机参数。对于单目相机而言，世界坐标系和相机坐标系可以认为是同一坐标系，因此外参矩阵不需要标定，认为
 \begin_inset Formula $\boldsymbol{R}$
 \end_inset
 

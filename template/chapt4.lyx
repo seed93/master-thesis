@@ -253,7 +253,7 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-对极线校正后结果，对应点纵坐标相同。
+对极线校正后结果
 \end_layout
 
 \end_inset
@@ -491,7 +491,39 @@ SAD和SSD方法中值越小表示越相似，NCC则相反，其取值范围为
 \begin_layout Standard
 平滑约束是最显而易见的，在图像处理中，现实世界的图片总具有较强的连续性，即相邻区域的像素值更可能较接近，与邻域明显有差异的被认为是噪声点。视差图也是如此，也应具
 有连续性，即满足平滑约束。具体来说，若一个点的邻域所有点都没有有效的视差值则被认为是孤点，其视差值也将被认为无效。此外，还要判断其邻域内视差值和该点视差值的差异
-，若差异超过1像素则被认为不一致，当不一致点多余一致点时，该点的视差值同样会被认为无效。
+，若差异超过1像素则被认为不一致，当不一致点多余一致点时，该点的视差值同样会被认为无效。如图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig: 平滑约束"
+
+\end_inset
+
+，中心点为待确认点，邻域范围为
+\begin_inset Formula $3\times3$
+\end_inset
+
+，图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig: 无效1"
+
+\end_inset
+
+所有点都没有有效视差值，图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig: 无效2"
+
+\end_inset
+
+一致点有3个，不足一半，因此均为无效点，只有图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:有效"
+
+\end_inset
+
+一致点为6个，判为有效。
 \end_layout
 
 \begin_layout Standard
@@ -522,8 +554,15 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-所有点都没有有效视差值：无效。
+无效
 \end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig: 无效1"
 
 \end_inset
 
@@ -553,8 +592,15 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-一致点有3个，不足一半：无效。
+无效
 \end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig: 无效2"
 
 \end_inset
 
@@ -584,8 +630,15 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-一致点为6个：有效。
+有效
 \end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:有效"
 
 \end_inset
 
@@ -598,12 +651,15 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-平滑约束示意。中心点为待确认点，邻域范围为
-\begin_inset Formula $3\times3$
+平滑约束示意
+\end_layout
+
 \end_inset
 
-。
-\end_layout
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig: 平滑约束"
 
 \end_inset
 
@@ -720,7 +776,14 @@ reference "fig:order-1"
 
 \end_inset
 
-所示，
+所示，图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:order-before"
+
+\end_inset
+
+底部行在上方行寻找匹配点，产生若干违背顺序约束的边，
 \begin_inset Float figure
 wide false
 sideways false
@@ -731,7 +794,7 @@ status collapsed
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -749,8 +812,15 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-底部行在上方行寻找匹配点，产生若干违背顺序约束的边。
+约束调整前
 \end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:order-before"
 
 \end_inset
 
@@ -767,7 +837,7 @@ status collapsed
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -785,7 +855,7 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-经过删减，保留最多不交错边。
+约束调整后
 \end_layout
 
 \end_inset
@@ -816,8 +886,7 @@ name "fig:order-1"
 
 \end_inset
 
-图片某一行的点对应可能是有交错的，由于顺序约束的存在，对于图片每一行，都需要将交错边去掉，应在满足没有交错边的条件下尽可能保留多的边。对于该问题，记某行视差值有
-效的点共有
+由于顺序约束的存在，对于图片每一行，都需要将交错边去掉，应在满足没有交错边的条件下尽可能保留多的边。对于该问题，记某行视差值有效的点共有
 \begin_inset Formula $n$
 \end_inset
 
@@ -1471,7 +1540,7 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-亚像素优化效果对比，细节明显更加丰富、清晰。
+亚像素优化效果对比
 \end_layout
 
 \end_inset
@@ -1652,6 +1721,20 @@ name "sub:删除杂点"
 由于每个点云相对独立，滤波时无法利用其他视角提供的信息，点云合并后还可以通过计算法向的相对关系再次过滤。如图
 \begin_inset CommandInset ref
 LatexCommand ref
+reference "fig:del"
+
+\end_inset
+
+，点A、B、C在2号相机上的投影重合，图
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:del_a"
+
+\end_inset
+
+产生了冲突，应该被删掉。具体来说，如图
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "fig:del_a"
 
 \end_inset
@@ -1702,7 +1785,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-不合理情况，A、B保留其一。
+不合理法向
 \end_layout
 
 \end_inset
@@ -1741,7 +1824,7 @@ status open
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-合理的法向。C点的存在使A、B均合理。
+合理法向
 \end_layout
 
 \end_inset
@@ -1762,14 +1845,7 @@ name "fig:del_b"
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-点A、B、C在2号相机上的投影重合，图
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "fig:del_a"
-
-\end_inset
-
-产生了冲突，应该被删掉。
+删除杂点示意
 \end_layout
 
 \end_inset
@@ -2110,120 +2186,6 @@ sideways false
 status collapsed
 
 \begin_layout Plain Layout
-\align center
-\begin_inset Tabular
-<lyxtabular version="3" rows="5" columns="2">
-<features rotate="0" tabularvalignment="middle">
-<column alignment="center" valignment="top">
-<column alignment="center" valignment="top">
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-操作系统
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Windows 8.1 64bit
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-开发环境
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Visual Studio 2010/2015
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-CPU
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Intel(R) Core(TM) i5-2400 CPU @3.10Ghz
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-内存
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-4GB
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-硬盘
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1GB空闲空间
-\end_layout
-
-\end_inset
-</cell>
-</row>
-</lyxtabular>
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -2236,6 +2198,140 @@ Intel(R) Core(TM) i5-2400 CPU @3.10Ghz
 \begin_inset CommandInset label
 LatexCommand label
 name "tab:env"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="2">
+<features rotate="0" booktabs="true" tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+项目
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+参数
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+操作系统
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Windows 8.1 64bit
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+开发环境
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Visual Studio 2010/2015
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+CPU
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Intel(R) Core(TM) i5-2400 CPU @3.10Ghz
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+内存
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4GB
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topspace="3pt" bottomspace="2pt">
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+硬盘
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1GB空闲空间
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
 
 \end_inset
 
@@ -2321,7 +2417,7 @@ name "fig:result2"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
@@ -2339,7 +2435,7 @@ status collapsed
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-三维人脸数据库。包含55人，每人25个表情，共计1375个三维模型。
+三维人脸数据库
 \end_layout
 
 \end_inset

@@ -99,7 +99,7 @@ thetitle
 \end_layout
 
 \begin_layout Major
-自动化
+控制科学与工程
 \end_layout
 
 \begin_layout Author
@@ -132,25 +132,15 @@ theauthor
 \end_layout
 
 \begin_layout Title(en)
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-LyX
-\end_layout
-
-\end_inset
-
- Template for Tsinghua University Thesis
+Human Face 3D Reconstruction
 \end_layout
 
 \begin_layout Degree(en)
-Master of Engineering
+Master of Science
 \end_layout
 
 \begin_layout Major(en)
-Automation
+Control Science and Engineering
 \end_layout
 
 \begin_layout Author(en)
@@ -175,53 +165,24 @@ May, 2016
 本文旨在实现一套人脸三维模型采集和重建系统，同时可以提供在多种光照条件下的不同人物、多表情、多视角的二维照片。本工作主要包含三个部分：
 \end_layout
 
-\begin_deeper
-\begin_layout Enumerate
-\paragraph_spacing other 1.5
-搭建三套多相机阵列系统。
-\begin_inset VSpace -30bp
-\end_inset
-
-
+\begin_layout Abstract
+首先，搭建三套多相机阵列系统。第一套系统配有10台高分辨率彩色相机以及2台Kinect二代深度相机，光源包括4盏均匀光照的专业摄影灯以及120个单独可控的LED
+灯，可以实现多视角变光照同步采集；第二套系统更加简洁，利用6台闪光灯同步曝光，触发10台单反相机同步采集，得到高质量图片；第三套系统为环形GoPro相机阵列，设
+计实现配套的多相机控制采集软件。
 \end_layout
 
-\begin_deeper
-\begin_layout Enumerate
-\paragraph_spacing other 1.5
-搭建一套多相机、光照可控的硬件系统，并设计完成了配套的同步采集软件。该系统配有10台高分辨率彩色相机以及2台Kinect二代深度相机，光源包括4盏均匀光照的专业
-摄影灯以及120个单独可控的LED灯，可以实现多视角变光照同步采集；
+\begin_layout Abstract
+其次，本工作提出了一种新的标定装置和算法，可以一次性同时标定多台不同尺度、不同视场角的相机，与传统的棋盘格标定、一维球体标定等方法相比，具有采集简单、运算速度快
+、结果准确等显著优势。该标定算法不仅可用于本硬件系统，同样适用各种多相机标定场合，尤其可以解决对不同尺度相机标定的问题。
 \end_layout
 
-\begin_layout Enumerate
-\paragraph_spacing other 1.5
-搭建一套简易多相机同步采集系统，利用6台闪光灯同步曝光，触发10台单反相机同步采集，得到高质量图片；
+\begin_layout Abstract
+最后，本文的核心是人脸三维重建算法，该算法基于不同视角的二维图片进行逐像素匹配，计算优化视差图，从而鲁棒地重建出高精度的人脸三维点云，并通过一系列的后处理最终获
+得带有纹理信息的人脸三角面片模型。该算法同样可以用于其他物体的三维重建，有望在文物三维重建等领域发挥作用。
 \end_layout
 
-\begin_layout Enumerate
-\paragraph_spacing other 1.5
-搭建一套环形GoPro相机阵列，设计实现配套的多相机控制采集软件。
-\begin_inset VSpace -50bp
-\end_inset
-
-
-\end_layout
-
-\end_deeper
-\begin_layout Enumerate
-\paragraph_spacing other 1.5
-本工作提出了一种新的标定装置和算法，可以一次性同时标定多台不同尺度、不同视场角的相机，与传统的棋盘格标定、一维球体标定等方法相比，具有采集简单、运算速度快、结果
-准确等显著优势。该标定算法不仅可用于本硬件系统，同样适用各种多相机标定场合，尤其可以解决对不同尺度相机标定的问题。
-\end_layout
-
-\begin_layout Enumerate
-\paragraph_spacing other 1.5
-本文的核心是人脸三维重建算法，该算法基于不同视角的二维图片进行逐像素匹配，计算优化视差图，从而鲁棒地重建出高精度的人脸三维点云，并通过一系列的后处理最终获得带有
-纹理信息的人脸三角面片模型。该算法同样可以用于其他物体的三维重建，有望在文物三维重建等领域发挥作用。
-\end_layout
-
-\end_deeper
 \begin_layout Keywords
-人脸；三维；采集；重建；
+人脸；三维；采集；重建
 \end_layout
 
 \begin_layout Abstract(en)
@@ -243,49 +204,22 @@ This paper aims to build a 3D face capture and reconstruction system, which
  There are three parts as follows:
 \end_layout
 
-\begin_deeper
-\begin_layout Enumerate
-\paragraph_spacing other 1.5
-Build three multi-camera capture systems.
-\begin_inset VSpace -30bp
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
-\begin_layout Enumerate
-\paragraph_spacing other 1.5
-Build a multi-camera, light controllable system and design the supporting
- synchronous capture software.
- This system includes ten high resolution color cameras and two Kinect2
+\begin_layout Abstract(en)
+First, build three multi-camera capture systems.
+ The fisrt system includes ten high resolution color cameras and two Kinect2
  depth cameras.
  Light sources include four professional photography lights with uniform
  illumination and 120 individually controllable LED lights, which can achieve
  multi-direction synchronous capture under different lights.
-\end_layout
-
-\begin_layout Enumerate
-\paragraph_spacing other 1.5
-Build a simple multi-camera capture system, using six synchronized photoflash
+ The second system is more concise, which uses six synchronized photoflash
  and ten SLR camera to get high-quality images.
+ The third system is a cylinder GoPro camera array and its supporting camera
+ control software.
 \end_layout
 
-\begin_layout Enumerate
-\paragraph_spacing other 1.5
-Build a cylinder GoPro camera array, and design the supporting camera control
- software.
-\begin_inset VSpace -30bp
-\end_inset
-
-
-\end_layout
-
-\end_deeper
-\begin_layout Enumerate
-\paragraph_spacing other 1.5
-Present a novel calibration device and algorithm, which can calibrate multiple
- cameras of different scales and FOVs.
+\begin_layout Abstract(en)
+Second, present a novel calibration device and algorithm, which can calibrate
+ multiple cameras of different scales and FOVs.
  Compared with traditional methods like chessboard or one dimensional balls,
  this solution is much simpler, faster and more accurate.
  This calibration algorithm not only suits for this hardware system, but
@@ -293,8 +227,7 @@ Present a novel calibration device and algorithm, which can calibrate multiple
  scales.
 \end_layout
 
-\begin_layout Enumerate
-\paragraph_spacing other 1.5
+\begin_layout Abstract(en)
 The core of this paper is 3D face reconstruction algorithm.
  This method first calculates the disparity map according to pixel matching
  of images, then reconstructs high quality 3d face cloud robustly, and after
@@ -303,9 +236,8 @@ The core of this paper is 3D face reconstruction algorithm.
  is expected to play a role in other fields like historical relic reconstruction.
 \end_layout
 
-\end_deeper
 \begin_layout Keywords(en)
-face; 3D; capture; reconstruction;
+face; 3D; capture; reconstruction
 \end_layout
 
 \end_body

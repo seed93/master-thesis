@@ -6,6 +6,10 @@
 \begin_preamble
 \input{preamble}
 \hypersetup{pdftitle={\thetitle},pdfauthor={\theauthor}}
+\renewcommand{\labelenumi}{(\arabic{enumi})}
+\renewcommand{\labelenumii}{\Roman{enumii}.}
+\usepackage{enumitem}
+\setenumerate{fullwidth,itemindent=\parindent,listparindent=\parindent,itemsep=0ex,partopsep=0pt,parsep=0ex}
 \end_preamble
 \options doctor,xetex
 \use_default_options true

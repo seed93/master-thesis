@@ -723,7 +723,7 @@
     \parbox[t][5.0cm][t]{\paperwidth-7.2cm}{
       \renewcommand{\baselinestretch}{1.32}
       \begin{center}
-        \sanhao Dissertation Submitted to\\
+        \sanhao Thesis Submitted to\\
         {\bfseries Tsinghua University}\\
         in partial fulfillment of the requirement\\
         for the degree of\\
@@ -741,7 +741,7 @@
     \parbox[t][1.74cm][t]{\paperwidth-7.2cm}{
       \renewcommand{\baselinestretch}{1.2}\xiaosan\centering
       \begin{tabular}{r@{\extracolsep{0.8em}}l}
-        Dissertation Supervisor : & \thu@esupervisor\\
+        Thesis Supervisor : & \thu@esupervisor\\
         \ifx\thu@eassosupervisor\@empty
           \else Associate Supervisor : & \thu@eassosupervisor\\\fi
         \ifx\thu@ecosupervisor\@empty
