@@ -101,7 +101,7 @@
 \ifthu@xetex
   \RequirePackage{mathptmx} % fontspec conflicts with txfonts now, so we have to load other times-math fonts.
   \RequirePackage{xltxtra}
-  \RequirePackage[CJKnumber,BoldFont,ItalicFont,normalindentfirst]{xeCJK}
+  \RequirePackage[CJKnumber,BoldFont,SlantFont,normalindentfirst]{xeCJK}
   \punctstyle{quanjiao}
   % todo: minor fix of CJKnumb
   \def\CJK@null{\kern\CJKnullspace\Unicode{48}{7}\kern\CJKnullspace}
@@ -280,7 +280,7 @@
 \renewcommand{\chaptermark}[1]{\@mkboth{\@chapapp\  ~~#1}{}}
 \newlength\CJK@twochars
 \ifxetex
-  \def\CJK@spaceChar{\Unicode{48}{7}}
+  \def\CJK@spaceChar{\hskip \f@size \p@}
 \else
   \ifthu@UTF
     \def\CJK@spaceChar{\CJKchar{"080}{"080}}
@@ -300,21 +300,7 @@
   \let\endenumerate\endcompactenum
   \let\description\compactdesc
   \let\enddescription\endcompactdesc}
-\newcommand*\MakePerPage[2][\@ne]{%
-  \expandafter\def\csname c@pchk@#2\endcsname{\c@pchk@{#2}{#1}}%
-  \newcounter{pcabs@#2}%
-  \@addtoreset{pchk@#2}{#2}}
-\def\new@pagectr#1{\@newl@bel{pchk@#1}}
-\def\c@pchk@#1#2{\z@=\z@
-  \begingroup
-  \expandafter\let\expandafter\next\csname pchk@#1@\arabic{pcabs@#1}\endcsname
-  \addtocounter{pcabs@#1}\@ne
-  \expandafter\ifx\csname pchk@#1@\arabic{pcabs@#1}\endcsname\next
-  \else \setcounter{#1}{#2}\fi
-  \protected@edef\next{%
-    \string\new@pagectr{#1}{\arabic{pcabs@#1}}{\noexpand\thepage}}%
-  \protected@write\@auxout{}{\next}%
-  \endgroup\global\z@}
+\RequirePackage{perpage}
 \MakePerPage{footnote}
 \def\thu@textcircled#1{%
   \ifnum \value{#1} <10 \textcircled{\xiaoliu\arabic{#1}}

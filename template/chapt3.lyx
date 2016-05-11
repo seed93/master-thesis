@@ -1982,14 +1982,14 @@ inect外参。接下来对其中的几个关键步骤做详细介绍。
 \end_layout
 
 \begin_layout Standard
-此处找标记点的候选点和
+此处找标记点的候选点方法和
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:寻找标记点"
 
 \end_inset
 
-类似，首先进行图像分割，找出角点存在的区域，然后找到角点作为候选点。接下来要筛选候选点，完成匹配，计算出每个点的三维坐标：
+节类似，首先进行图像分割，找出角点存在的区域，然后找到角点作为候选点。接下来要筛选候选点，完成匹配，计算出每个点的三维坐标：
 \end_layout
 
 \begin_layout Enumerate

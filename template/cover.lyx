@@ -6,7 +6,7 @@
 \begin_preamble
 \input{preamble}
 \end_preamble
-\options doctor,xetex
+\options master,xetex
 \use_default_options true
 \master main.lyx
 \maintain_unincluded_children false
@@ -192,7 +192,7 @@ In the field of computer vision, the goal of most research about human faces
  it is difficult to fully reflect the facial features, which causes the
  limitation of face recognition.
  3D face model is expected to provide more information to break through.
- However, as exiting 3D face databases can not provide enough models and
+ However, as existing 3D face databases can not provide enough models and
  facial expressions, and some of which lack key parts like ears or chin,
  it is important to produce a more complete 3D face database.
 \end_layout
