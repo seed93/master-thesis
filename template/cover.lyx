@@ -90,6 +90,14 @@ thetitle
 
 \end_layout
 
+\begin_layout Title
+基于多摄像机的高精度
+\begin_inset Newline newline
+\end_inset
+
+人脸三维重建
+\end_layout
+
 \begin_layout Degree
 工学硕士
 \end_layout
@@ -132,7 +140,7 @@ theauthor
 \end_layout
 
 \begin_layout Title(en)
-Human Face 3D Reconstruction
+Research on High Quality Human Face 3D Reconstruction based on Multi-camera
 \end_layout
 
 \begin_layout Degree(en)

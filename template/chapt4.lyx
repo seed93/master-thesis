@@ -2913,13 +2913,39 @@ http://www.agisoft.cn/
 
 \begin_layout Standard
 重光照渲染是指将已有的三维模型置于新的光照环境下，结合环境光照和模型的法向、材质信息进行重新渲染，得到在某一视角下的投影。球面谐波是一种较常用的模型，球谐光照将
-光照方程中的信息使用球谐基函数投影到频谱空间，渲染时还原原始光照方程并对场景着色。
+光照方程中的信息使用球谐基函数投影到频谱空间，渲染时还原原始光照方程并对场景着色。在此，我们做了一定近似和假设，具体如下：
+\end_layout
+
+\begin_layout Enumerate
+模型中点的颜色即为其反射率（albedo）；
+\end_layout
+
+\begin_layout Enumerate
+人体本身不发光，且为漫反射；
+\end_layout
+
+\begin_layout Enumerate
+用二阶球面谐波函数近似环境光照的低频部分。
 \end_layout
 
 \begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+点在环境光照下的颜色由其自身的反射率、法向、环境光照的球谐系数决定，如下式
 \begin_inset Formula 
 \begin{equation}
-L\left(\mbi x,\vec{\omega}_{0}\right)=L_{e}\left(\mbi x,\vec{\omega}_{0}\right)+\int_{S}f_{r}\left(\mbi x,\vec{\omega}_{i}\rightarrow\vec{\omega}_{0}\right)L\left(\mbi x',\vec{\omega}_{i}\right)G\left(\mbi x,\mbi x'\right)V\left(\mbi x,\mbi x'\right)d\omega_{i}\label{eq:sh}
+B(i)=\alpha(i)\sum_{k=0}^{8}l_{k}H_{k}(\mbi n(i))
 \end{equation}
 
 \end_inset
@@ -2928,81 +2954,34 @@ L\left(\mbi x,\vec{\omega}_{0}\right)=L_{e}\left(\mbi x,\vec{\omega}_{0}\right)+
 \end_layout
 
 \begin_layout Standard
-式
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:sh"
-
+其中
+\begin_inset Formula $\alpha(i)$
 \end_inset
 
-是较常用的光照模型，
-\begin_inset Formula $L\left(\mbi x,\vec{\omega}_{0}\right)$
+为点
+\begin_inset Formula $i$
 \end_inset
 
-是点
-\begin_inset Formula $\mbi x$
+的反射率，
+\begin_inset Formula $l_{k}$
 \end_inset
 
-在
-\begin_inset Formula $\vec{\omega}_{0}$
+为球谐基函数的常数部分，
+\begin_inset Formula $H_{k}(\mbi n(i))$
 \end_inset
 
-方向上的光密度，
-\begin_inset Formula $L_{e}\left(\mbi x,\vec{\omega}_{0}\right)$
+是球谐基函数，输入为点的法向
+\begin_inset Formula $\mbi n=(n_{x},n_{y},n_{z})$
 \end_inset
 
-是物体自身发出的光线，积分下标S表示点
-\begin_inset Formula $\mbi x$
-\end_inset
-
-法向对应的半球空间，
-\begin_inset Formula $f_{r}\left(\mbi x,\vec{\omega}_{i}\rightarrow\vec{\omega_{0}}\right)$
-\end_inset
-
-是双向反射分布函数（Bidirectional Reflectance Distribution Function，BRDF），将光线从
-\begin_inset Formula $\vec{\omega}_{i}$
-\end_inset
-
-方向变换到
-\begin_inset Formula $\vec{\omega}_{0}$
-\end_inset
-
-方向，
-\begin_inset Formula $L\left(\mbi x',\vec{\omega}_{i}\right)$
-\end_inset
-
-是点
-\begin_inset Formula $\mbi x'$
-\end_inset
-
-沿
-\begin_inset Formula $\vec{\omega}_{i}$
-\end_inset
-
-方向到达的光纤，
-\begin_inset Formula $G\left(\mbi x,\mbi x'\right)$
-\end_inset
-
-是点
-\begin_inset Formula $\mbi x,\mbi x'$
-\end_inset
-
-间的几何关系，
-\begin_inset Formula $V\left(\mbi x,\mbi x'\right)$
-\end_inset
-
-是点
-\begin_inset Formula $\mbi x,\mbi x'$
-\end_inset
-
-间的可见性关系（值为0或1）。该方程可利用蒙特卡洛积分方法求解。在本节实现中，人体本身不发光，因此没有
-\begin_inset Formula $L_{e}\left(\mbi x,\vec{\omega}_{0}\right)$
-\end_inset
-
-项，假设人体表面材质只有漫反射分量，令BRDF项为常数。球谐变换有一个特性，如下式
+，其中
 \begin_inset Formula 
 \begin{equation}
-\int_{S}f_{1}(s)f_{2}(s)ds\approx\int_{S}\tilde{f}_{1}(s)\tilde{f}_{2}(s)ds=\vec{c}_{1}\cdot\vec{c}_{2}=\sum c_{1}^{i}c_{2}^{i}
+\begin{array}{l}
+H_{0}=1.0,H_{1}=n_{y},H_{2}=n_{z},H_{3}=n_{x},H_{4}=n_{x}n_{y},\\
+H_{5}=n_{y}n_{z},H_{6}=2n_{z}^{2}-n_{x}^{2}-n_{y}^{2},\\
+H_{7}=n_{z}n_{x},H_{8}=n_{x}^{2}-n_{y}^{2}.
+\end{array}\label{eq:SH}
 \end{equation}
 
 \end_inset
@@ -3011,45 +2990,14 @@ reference "eq:sh"
 \end_layout
 
 \begin_layout Standard
-利用这一特性，可将
-\begin_inset Formula $L\left(\mbi x',\vec{\omega}_{i}\right)$
-\end_inset
-
-项与其他分开，因此式
+由式
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "eq:sh"
+reference "eq:SH"
 
 \end_inset
 
-简化为
-\begin_inset Formula 
-\begin{equation}
-L\left(\mbi x,\vec{\omega}_{0}\right)=\int_{S}G\left(\mbi x,\mbi x'\right)V\left(\mbi x,\mbi x'\right)d\omega_{i}\label{eq:simple_sh}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-使用球谐函数近似
-\begin_inset Formula $G\left(\mbi x,\mbi x'\right)$
-\end_inset
-
-和
-\begin_inset Formula $V\left(\mbi x,\mbi x'\right)$
-\end_inset
-
-，即可求得简化后的式
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "eq:simple_sh"
-
-\end_inset
-
-的近似解用于渲染。渲染 结果如图
+即可得到在任意视角、任意光照下的渲染结果。渲染 结果如图
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:result3-1"
