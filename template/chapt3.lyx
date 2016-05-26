@@ -162,6 +162,10 @@ Z_{w}\\
 
 \end_inset
 
+
+\end_layout
+
+\begin_layout Standard
 其中
 \begin_inset Formula $(u,v)$
 \end_inset
@@ -468,7 +472,7 @@ name "fig:marker"
 
 \begin_layout Standard
 为了让所有相机都能看到标记点，本文选择在球面上放置标记面片。每个标记面片上包含两个标记点，为了减少找到错误标记点的可能性，标记面片上尽量减少了较大的梯度变化。每
-个标记点中心黑白相间，并随着半径变大渐变到中灰色，两个标记点的交接有一段纯中灰色过渡，防止出现剧烈梯度变化，而标记点中心黑白反差明显，在不同光照下仍能鲁棒找到标
+个标记点中心黑白相间，并随着半径变大渐变到中灰色，两个标记点的交接有一段纯中灰色过渡，防止出现剧烈梯度变化；而标记点中心黑白反差明显，在不同光照下仍能鲁棒找到标
 记点。需要指出的是，两个标记点采用对称设计，有顺序区分，在之后标记点匹配时可以大大减少误匹配。
 \end_layout
 
@@ -767,8 +771,8 @@ key "fischler1981random"
 \end_inset
 
 由Fischler等人于1981年提出，该方法在给定一组样本和模型条件下，拟合找到最合适的模型参数。该方法最大的特点是能够区分内点和外点（噪声点），只有内点才会
-对模型参数有贡献，对噪声具有较强的鲁棒性。该方法首先随机选择尽可能少的样本点来估计模型，被选择的点被认为是内点，其他为外点，对所有外点计算其与模型的契合程度，若
-误差足够小则被归为内点，当所有点都被划分，记录内点数量和误差之和。不断的采样尝试，选择误差最小的模型为最佳匹配。该方法在本文将被多次使用，故在此一并介绍。
+对模型参数有贡献，对噪声具有较强的鲁棒性。该方法首先随机选择尽可能少的样本点来估计模型，被选择的点被认为是内点，其他为外点。对所有外点计算其与模型的契合程度，若
+误差足够小则被归为内点，当所有点都被划分，记录内点数量和误差之和。通过不断地采样尝试，选择误差最小的模型为最佳匹配。该方法在本文将被多次使用，故在此一并介绍。
 \end_layout
 
 \begin_layout Standard
@@ -875,21 +879,7 @@ name "enu:算点"
 \end_layout
 
 \begin_layout Enumerate
-重复
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "enu:取点"
-
-\end_inset
-
-~
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "enu:算点"
-
-\end_inset
-
-，找到点数最多的圆，圆心记为
+重复以上三步，找到点数最多的圆，圆心记为
 \begin_inset Formula $(x_{c},y_{c})$
 \end_inset
 
@@ -934,7 +924,17 @@ Z_{cc} & =\frac{R}{r}f
 \end_inset
 
 
-\begin_inset Newline newline
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
 \end_inset
 
 这里的主点和焦距均为预设值，主点初始为图像中心，焦距根据经验设定。
@@ -1021,19 +1021,19 @@ reference "fig:分割标记点"
 
 \begin_deeper
 \begin_layout Enumerate
-高斯模糊，得到一张近似的背景图片
+高斯模糊，得到一张近似的背景图片；
 \end_layout
 
 \begin_layout Enumerate
-和原图相减得到大概的分割结果
+和原图相减得到大概的分割结果；
 \end_layout
 
 \begin_layout Enumerate
-使用自适应阈值分割方法得到合适的阈值进行分割
+使用自适应阈值分割方法得到合适的阈值进行分割；
 \end_layout
 
 \begin_layout Enumerate
-填充空洞
+填充空洞。
 \end_layout
 
 \end_deeper
@@ -1239,6 +1239,20 @@ s.t. & \mbi R\mbi R^{T}=\mbi I
 
 \end_inset
 
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
 该问题即为正交强迫一致问题，最早由Green于1952年提出
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -1246,7 +1260,7 @@ key "orth1952"
 
 \end_inset
 
-，限于空间，具体推导过程本文不再给出。其解法是对
+，限于篇幅，具体推导过程本文不再给出。其解法是对
 \begin_inset Formula $\mbi P_{e}\mbi P_{r}^{T}$
 \end_inset
 
@@ -1367,7 +1381,20 @@ http://www.uco.es/investiga/grupos/ava/node/39/
 
 \end_inset
 
-。经过SBA非线性优化，即可得到精确的相机参数，其重投影的平均误差可以达到0.08像素（原图尺寸为
+。经过SBA非线性优化，即可得到精确的相机参数，其重投影的平均误差可以达到3
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textperthousand
+\end_layout
+
+\end_inset
+
+ 像素（原图尺寸为
 \begin_inset Formula $5184\times3456$
 \end_inset
 
@@ -1723,7 +1750,7 @@ reference "fig:marker2"
 \begin_inset Float table
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \align center
@@ -2142,11 +2169,39 @@ reference "fig:示意图"
 
 \end_inset
 
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
 该问题没有解析解，理论上可以通过多次迭代得到较好的近似解，本算法采用了最小二乘方法得到了线性近似解，实际中效果可以满足要求。圆上点应满足方程
 \begin_inset Formula 
 \begin{equation}
 \left(X_{i}-X_{c}\right)^{2}+\left(Y_{i}-Y_{c}\right)^{2}+\left(Z_{i}-Z_{c}\right)^{2}=r^{2}
 \end{equation}
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \end_inset
 
@@ -2163,11 +2218,39 @@ D & =X_{c}^{2}+Y_{c}^{2}+Z_{c}^{2}-r^{2}
 
 \end_inset
 
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
 则可得到
 \begin_inset Formula 
 \begin{equation}
 X_{i}^{2}+Y_{i}^{2}+Z_{i}^{2}+AX_{i}+BY_{i}+CZ_{i}+D=0
 \end{equation}
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \end_inset
 
@@ -2188,6 +2271,20 @@ X_{2}^{2}+Y_{2}^{2}+Z_{2}^{2}\\
 X_{count}^{2}+Y_{count}^{2}+Z_{count}^{2}
 \end{pmatrix}
 \end{equation}
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \end_inset
 

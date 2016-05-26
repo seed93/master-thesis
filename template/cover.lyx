@@ -5,6 +5,7 @@
 \textclass thuthesis
 \begin_preamble
 \input{preamble}
+\usepackage{textcomp}
 \end_preamble
 \options master,xetex
 \use_default_options true
@@ -140,7 +141,7 @@ theauthor
 \end_layout
 
 \begin_layout Title(en)
-Research on High Quality Human Face 3D Reconstruction based on Multi-camera
+Research on High Quality 3D Reconstruction of Human Face based on Multi-camera
 \end_layout
 
 \begin_layout Degree(en)
@@ -170,7 +171,7 @@ May, 2016
 \end_layout
 
 \begin_layout Abstract
-本文旨在实现一套人脸三维模型采集和重建系统，同时可以提供在多种光照条件下的不同人物、多表情、多视角的二维照片。本工作主要包含三个部分：
+本文旨在实现一套人脸三维模型采集和重建系统，同时可以提供在多种光照条件下的不同人物、多表情、多视角的二维照片。本文主要包含三个部分：
 \end_layout
 
 \begin_layout Abstract
@@ -180,72 +181,108 @@ May, 2016
 \end_layout
 
 \begin_layout Abstract
-其次，本工作提出了一种新的标定装置和算法，可以一次性同时标定多台不同尺度、不同视场角的相机，与传统的棋盘格标定、一维球体标定等方法相比，具有采集简单、运算速度快
-、结果准确等显著优势。该标定算法不仅可用于本硬件系统，同样适用各种多相机标定场合，尤其可以解决对不同尺度相机标定的问题。
+其次，提出了一种新的标定系统，可以一次性同时标定多台不同尺度、不同视场角的相机，与传统的棋盘格标定、一维球体标定等方法相比，具有采集简单、运算速度快等显著优势，
+重投影误差可达3
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textperthousand
+\end_layout
+
+\end_inset
+
+ 像素。该标定算法不仅可用于本硬件系统，同样适用各种多相机标定场合，尤其可以解决对不同尺度相机标定的问题。
 \end_layout
 
 \begin_layout Abstract
-最后，本文的核心是人脸三维重建算法，该算法基于不同视角的二维图片进行逐像素匹配，计算优化视差图，从而鲁棒地重建出高精度的人脸三维点云，并通过一系列的后处理最终获
-得带有纹理信息的人脸三角面片模型。该算法同样可以用于其他物体的三维重建，有望在文物三维重建等领域发挥作用。
+最后，提出了一种人脸三维重建算法，该算法基于不同视角的二维图片进行逐像素匹配，计算优化视差图，从而鲁棒地重建出高精度的人脸三维点云，并通过一系列的后处理最终获得
+带有纹理信息的人脸三角面片模型。该算法精度优于photoscan软件、PVMS2开源算法，同样可以用于其他物体的三维重建，有望在文物三维重建等领域发挥作用。
 \end_layout
 
 \begin_layout Keywords
-人脸；三维；采集；重建
+相机阵列；多相机标定；三维重建
 \end_layout
 
 \begin_layout Abstract(en)
-In the field of computer vision, the goal of most research about human faces
- is to identify, include face detection, recognition, alignment.
- As most of existing approaches and databases are limited to 2D images,
- it is difficult to fully reflect the facial features, which causes the
- limitation of face recognition.
- 3D face model is expected to provide more information to break through.
- However, as existing 3D face databases can not provide enough models and
- facial expressions, and some of which lack key parts like ears or chin,
- it is important to produce a more complete 3D face database.
+In the field of computer vision, the goal of most research about human faces,
+ including face detection, recognition and alignment, is to identify the
+ faces.
+ As most existing approaches and databases are limited to 2D images, it
+ is difficult to fully reflect the facial features, which causes limitations
+ in the application of face recognition.
+ 3D face models are expected to provide more information to break through.
+ However, as existing 3D face databases do not have enough models and facial
+ expressions, and some of them lack key parts like ears or chin, it is important
+ to construct a more complete 3D face database.
 \end_layout
 
 \begin_layout Abstract(en)
-This paper aims to build a 3D face capture and reconstruction system, which
- can provide multiple face images with various expressions and directions
- under multiple lightings.
- There are three parts as follows:
+This paper aims to build a 3D face capturing and reconstruction system,
+ which can provide multiple face images with various expressions and directions
+ under multiple light conditions.
+ This work has the following three major components:
 \end_layout
 
 \begin_layout Abstract(en)
-First, build three multi-camera capture systems.
- The fisrt system includes ten high resolution color cameras and two Kinect2
+First, we build three multi-camera capture systems.
+ The first system includes ten high resolution color cameras and two Kinect2
  depth cameras.
  Light sources include four professional photography lights with uniform
- illumination and 120 individually controllable LED lights, which can achieve
- multi-direction synchronous capture under different lights.
+ illumination and 120 individually controllable LED lights.
+ The system can achieve multi-direction synchronous capture under different
+ lightings.
  The second system is more concise, which uses six synchronized photoflash
  and ten SLR camera to get high-quality images.
- The third system is a cylinder GoPro camera array and its supporting camera
- control software.
+ The third system is a cylinder GoPro camera array with supporting control
+ software.
 \end_layout
 
 \begin_layout Abstract(en)
-Second, present a novel calibration device and algorithm, which can calibrate
- multiple cameras of different scales and FOVs.
- Compared with traditional methods like chessboard or one dimensional balls,
- this solution is much simpler, faster and more accurate.
- This calibration algorithm not only suits for this hardware system, but
- also works for other multi-camera systems, especially for cameras of different
+Second, we propose a novel calibration system, which can simultaneously
+ calibrate multiple cameras of different scales and FOVs.
+ Compared with traditional methods using a chessboard or a wand, this solution
+ is simpler and faster, and its reprojection error is below 
+3
+\lang english
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textperthousand 
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset space \space{}
+\end_inset
+
+pixel.
+ This calibration algorithm not only suits this hardware system, but also
+ works for other multi-camera systems, especially for cameras of different
  scales.
 \end_layout
 
 \begin_layout Abstract(en)
-The core of this paper is 3D face reconstruction algorithm.
- This method first calculates the disparity map according to pixel matching
- of images, then reconstructs high quality 3d face cloud robustly, and after
- some postprocessing, finally produces textured mesh model.
+Third, we propose a 3D face reconstruction algorithm.
+ This method first calculates the disparity map according to the dense pixel
+ matching of images, then reconstructs the high quality 3D face cloud robustly,
+ finally produces the textured mesh model after some post-processing.
+ The quality of this method is better than those of photoscan and PMVS2.
  This method can also be used for 3D reconstruction of other objects and
- is expected to play a role in other fields like historical relic reconstruction.
+ is expected to benefit in other fields like historical relic reconstruction.
 \end_layout
 
 \begin_layout Keywords(en)
-face; 3D; capture; reconstruction
+camera array; multi-camera calibration; 3D reconstruction
 \end_layout
 
 \end_body
