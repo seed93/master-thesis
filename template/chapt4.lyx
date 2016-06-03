@@ -2807,7 +2807,7 @@ reference "fig:三维对比"
 
 \end_inset
 
-对比了开源算法PMVS2、商业软件photoscan和Beeler论文结果，可以看出本算法结果鲁棒性和精度较好。
+对比了开源算法PMVS2、商业软件photoscan和Beeler论文结果，在红色框里对比方法表现较差，可以看出本算法结果鲁棒性和精度较好。
 \begin_inset Float figure
 wide false
 sideways false

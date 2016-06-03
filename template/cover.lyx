@@ -92,7 +92,7 @@ thetitle
 \end_layout
 
 \begin_layout Title
-基于多摄像机的高精度
+基于相机阵列的高精度
 \begin_inset Newline newline
 \end_inset
 
@@ -141,7 +141,8 @@ theauthor
 \end_layout
 
 \begin_layout Title(en)
-Research on High Quality 3D Reconstruction of Human Face based on Multi-camera
+Research on High Quality 3D Reconstruction of Human Face based on Camera
+ Array
 \end_layout
 
 \begin_layout Degree(en)
@@ -236,7 +237,7 @@ First, we build three multi-camera capture systems.
  The system can achieve multi-direction synchronous capture under different
  lightings.
  The second system is more concise, which uses six synchronized photoflash
- and ten SLR camera to get high-quality images.
+ and ten DSLR cameras to get high-quality images.
  The third system is a cylinder GoPro camera array with supporting control
  software.
 \end_layout
